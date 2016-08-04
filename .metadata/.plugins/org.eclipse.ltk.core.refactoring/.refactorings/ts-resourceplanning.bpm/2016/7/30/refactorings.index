@@ -1,0 +1,12 @@
+1469638702358	Rename local variable 'event'
+1469640408716	Rename local variable 'legacyPosLdList'
+1469640633037	Extract local variable 'repository'
+1469643335661	Rename local variable 'event'
+1469643442844	Rename local variable 'newEvent'
+1469643995694	Rename local variable 'moo'
+1469644759317	Rename local variable 'moo'
+1469644957033	Extract local variable 'repository'
+1469646512266	Rename field 'ACTION'
+1469646689015	Move compilation unit
+1469646743463	Rename type 'RequestContext'
+1469647748804	Rename method 'setupWithLegacy'

@@ -1,0 +1,22 @@
+1467394703615	Extract local variable 'posId'
+1467398370862	Extract constant 'TEST_POS_1'
+1467478179871	Change method 'processHelperCallback'
+1467478506438	Extract local variable 'businessKey'
+1467478602794	Extract local variable 'businessKey'
+1467479288092	Extract method 'fireTimers'
+1467480502434	Delete element
+1467481305401	Extract method 'moo'
+1467481350937	Rename method 'moo'
+1467485262942	Delete elements
+1467491227514	Move compilation unit
+1467491297830	Move compilation unit
+1467492737389	Extract local variable 'position'
+1467565118687	Rename method 'testPositionBookedToMax'
+1467565155973	Rename method 'testPositionBookedToMaxWithinSession'
+1467565168565	Rename method 'testPositionOverbooked'
+1467566647051	Move compilation units
+1467566652197	Delete element
+1467569475851	Move compilation unit
+1467571837197	Rename field 'PROCESS_KEY_REQUEST_HELP'
+1467580869421	Extract local variable 'event'
+1467581835635	Extract local variable 'postion'

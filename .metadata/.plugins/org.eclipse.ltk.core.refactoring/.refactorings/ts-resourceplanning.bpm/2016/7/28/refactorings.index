@@ -1,0 +1,46 @@
+1468225403329	Move compilation unit
+1468225498441	Rename type 'AppConfiguration'
+1468225509781	Rename type 'AppContext'
+1468225525948	Rename package 'de.trispeedys.resourceplanning.configuration.instance'
+1468225552518	Move compilation unit
+1468225558693	Move compilation units
+1468225579155	Move compilation unit
+1468225588681	Move compilation units
+1468225595807	Delete element
+1468225700934	Delete element
+1468258129680	Extract local variable 'position'
+1468268776250	Rename type 'ResultExluderTest'
+1468269622205	Extract local variable 'result'
+1468307286137	Rename method 'doConfigure'
+1468342385477	Move compilation unit
+1468347728629	Delete element
+1468347809828	Delete elements
+1468347815275	Move compilation unit
+1468347817683	Delete element
+1468351095757	Move compilation units
+1468351100098	Delete element
+1468351457451	Delete elements
+1468351462401	Delete element
+1468352435616	Move compilation unit
+1468352463436	Move compilation unit
+1468354672548	Extract local variable 'event'
+1468354678325	Extract local variable 'helper'
+1468398523035	Extract constant 'ACTION'
+1468398536896	Extract constant 'POSITION_ID'
+1468398544470	Extract constant 'HELPER_ID'
+1468398553521	Extract constant 'EVENT_ID'
+1468398705856	Rename type 'ServletParameters'
+1468442224690	Rename method 'renderCancelForeverForm'
+1468509695513	Delete elements
+1468510024484	Rename field 'GENERIC_RECEIVER'
+1468524260324	Rename type 'RequestErrorHandler'
+1468524349174	Extract local variable 'abstractRequestErrorHandler'
+1468524354191	Rename local variable 'abstractRequestErrorHandler'
+1468524415114	Extract local variable 'defaultHandler'
+1468524457936	Extract local variable 'defaultHandler'
+1468701335982	Delete element
+1468743099183	Rename enum constant 'BOOKING_PORCESSED'
+1468746205326	Extract method 'getTimeTableRow'
+1468779671173	Extract method 'buildPositionRow'
+1468779926046	Extract local variable 'assignedPositions'
+1468779938123	Extract local variable 'helperAssignablePositions'

@@ -1,0 +1,16 @@
+@startuml
+
+class Helper
+class Person
+
+Person <|-- Helper
+
+class Event
+
+class Assignment
+
+class Position
+
+class Domain
+
+@enduml

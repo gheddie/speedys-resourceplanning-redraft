@@ -1,0 +1,10 @@
+1469022495360	Rename type 'PosTakeOverConfirmaionDelegate'
+1469022532426	Copy compilation unit
+1469100001404	Extract constant 'COLOR_OFF'
+1469105213432	Extract local variable 'moo'
+1469111995115	Rename local variable 'firstRow'
+1469194226499	Extract local variable 'helper'
+1469194864568	Extract local variable 'token'
+1469210741520	Rename local variable 'legacyPOsitions'
+1469211587763	Rename local variable 'moo'
+1469212154774	Rename method 'testFirst'

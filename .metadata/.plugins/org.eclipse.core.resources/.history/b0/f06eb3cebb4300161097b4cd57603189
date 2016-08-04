@@ -1,0 +1,53 @@
+package de.trispeedys.resourceplanning.util.xml;
+
+import de.trispeedys.resourceplanning.entity.Domain;
+import de.trispeedys.resourceplanning.entity.Event;
+import de.trispeedys.resourceplanning.entity.EventDay;
+import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.enumeration.HelperState;
+import de.trispeedys.resourceplanning.xml.XmlDomain;
+import de.trispeedys.resourceplanning.xml.XmlEventDay;
+import de.trispeedys.resourceplanning.xml.XmlEventEntity;
+import de.trispeedys.resourceplanning.xml.XmlHelper;
+import de.trispeedys.resourceplanning.xml.XmlPosition;
+
+public class XmlConverter
+{
+    public static Domain convert(XmlDomain xmlDomain)
+    {
+        Domain domain = new Domain();
+        domain.setName(xmlDomain.getName());
+        return domain;
+    }
+
+    public static Event convert(XmlEventEntity xmlEvent)
+    {
+        Event event = new Event();
+        event.setDescription(xmlEvent.getDescription());
+        return event;
+    }
+
+    public static Position convert(XmlPosition xmlPosition)
+    {
+        Position position = new Position();
+        position.setName(xmlPosition.getName());
+        return position;
+    }
+
+    public static Helper convert(XmlHelper xmlHelper)
+    {
+        Helper helper = new Helper();
+        helper.setFirstName(xmlHelper.getFirstname());
+        helper.setLastName(xmlHelper.getLastname());
+        helper.setHelperState(HelperState.ACTIVE);
+        return helper;
+    }
+
+    public static EventDay convert(XmlEventDay xmlEventDay)
+    {
+        EventDay eventDay = new EventDay();
+        eventDay.setIndex(xmlEventDay.getIndex());
+        return eventDay;
+    }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<repositories>
+	<repository-class>de.trispeedys.resourceplanning.repository.HelperRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.EventRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.EventDayRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.AssignmentRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.PositionRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.EventPositionRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.AppConfigurationEntryRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.MessageQueueItemRepository</repository-class>
+</repositories>

@@ -1,0 +1,22 @@
+1467355720105	Extract local variable 'assignment'
+1467358403562	Extract local variable 'assignment'
+1467399649012	Rename method 'moo'
+1467399682505	Rename method 'checkBokkingCountInEvent'
+1467400249433	Rename field 'PARAM_ASSIGNMENT_START'
+1467401114843	Extract local variable 'createedAssignment'
+1467401133160	Rename local variable 'createedAssignment'
+1467477020077	Extract local variable 'assignmentCount'
+1467477036052	Extract local variable 'requiredHelperCount'
+1467490615677	Extract local variable 'jobsLeftInPosition'
+1467490856070	Rename local variable 'localDate'
+1467491261209	Move compilation unit
+1467491267721	Delete element
+1467491329469	Move compilation unit
+1467491333381	Delete element
+1467493201515	Extract local variable 'shifted'
+1467534083999	Delete element
+1467534107802	Move compilation units
+1467566345683	Rename type 'StrintUtil'
+1467574064553	Rename field 'BOOKING_COUNT_EXCEEDED'
+1467577188782	Extract local variable 'eventDay'
+1467581037916	Extract local variable 'domain'

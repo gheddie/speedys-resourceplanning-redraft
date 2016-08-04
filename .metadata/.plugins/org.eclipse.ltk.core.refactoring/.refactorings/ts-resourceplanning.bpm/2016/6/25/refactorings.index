@@ -1,0 +1,14 @@
+1466791533041	Delete element
+1466791535724	Delete element
+1466802937414	Delete element
+1466803089708	Rename field 'MOO'
+1466803230163	Extract local variable 'runtimeService'
+1466803769556	Copy compilation unit
+1466870457223	Rename method 'generateMailReminderBiusinessKey'
+1466870472906	Move compilation unit
+1466883463140	Extract method 'moo'
+1466883483920	Extract method 'mee'
+1466886230737	Rename type 'ResourcePlanningBpmVariables'
+1466886241674	Rename type 'ResourcePlanningBpmMessages'
+1466886443558	Rename local variable 'varBookPosId'
+1466886650542	Rename type 'Moo'

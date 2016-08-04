@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>ts-resourceplanning.entity</artifactId>
+	<parent>
+		<groupId>de.trispeedys.resourceplanning</groupId>
+		<artifactId>ts-resourceplanning.build</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../ts-resourceplanning.build/pom.xml</relativePath>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>de.gravitex.persistence</groupId>
+			<artifactId>hibernate-adapter</artifactId>
+			<version>1.0.0-FINAL</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.core</artifactId>
+			<version>3.1.0.CR1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.9</version>
+		</dependency>
+
+		<!-- START moved the following in in order to prevent slf compatibility 
+			issues in hibernate -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>3.1.0.CR2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<!-- END moved the following in in order to prevent slf compatibility issues 
+			in hibernate -->
+
+	</dependencies>
+</project>

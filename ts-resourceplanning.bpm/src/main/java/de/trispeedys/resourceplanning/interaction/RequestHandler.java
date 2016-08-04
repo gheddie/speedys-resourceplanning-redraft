@@ -1,0 +1,157 @@
+package de.trispeedys.resourceplanning.interaction;
+
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.camunda.bpm.engine.ProcessEngine;
+
+import de.trispeedys.resourceplanning.interaction.errorhandler.DefaultRequestErrorHandler;
+import de.trispeedys.resourceplanning.context.ApplicationContext;
+import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
+import de.trispeedys.resourceplanning.interaction.enumeration.ServletRequestContext;
+import de.trispeedys.resourceplanning.interaction.errorhandler.AbstractRequestErrorHandler;
+import de.trispeedys.resourceplanning.util.ServletRequestParameters;
+import de.trispeedys.resourceplanning.util.StringUtilMethods;
+import de.trispeedys.resourceplanning.util.html.HtmlGenerator;
+
+public class RequestHandler
+{
+    public static final String GENERIC_REQUEST_RECEIVER = "GenericRequestReceiver.jsp";
+
+    public static final String GENERIC_CONFIRM_RECEIVER = "GenericConfirmReceiver.jsp";
+
+    private static HashMap<Class<? extends Exception>, AbstractRequestErrorHandler> errorHandlers =
+            new HashMap<Class<? extends Exception>, AbstractRequestErrorHandler>();
+    static
+    {
+        // add custom handlers
+    }
+
+    public static String processRequest(HttpServletRequest request, ProcessEngine processEngine)
+    {
+        Long eventId = parseLong(request.getParameter(ServletRequestParameters.EVENT_ID));
+        Long helperId = parseLong(request.getParameter(ServletRequestParameters.HELPER_ID));
+        switch (ServletRequestContext.valueOf(request.getParameter(ServletRequestParameters.CONTEXT)))
+        {
+            case LEGACY_POS:
+                try
+                {
+                    HelperInteraction.processLegacyPositionTakeover(helperId, eventId, processEngine);
+                    return getOkResult();
+                }
+                catch (Exception e)
+                {
+                    return getRequestErrorHandler(e).renderResult(request);
+                }
+            case CALLBACK:
+                try
+                {
+                    HelperCallback helperCallback = HelperCallback.valueOf(request.getParameter(ServletRequestParameters.CALLBACK));
+                    Long positionId = parseLong(request.getParameter(ServletRequestParameters.POSITION_ID));
+                    HelperInteraction.processHelperCallback(helperCallback, helperId, eventId, positionId, processEngine);
+                    return getOkResult();
+                }
+                catch (Exception e)
+                {
+                    return getRequestErrorHandler(e).renderResult(request);
+                }
+            default:
+                // will not occur
+                return null;
+        }
+    }
+
+    private static AbstractRequestErrorHandler getRequestErrorHandler(Exception e)
+    {
+        AbstractRequestErrorHandler handler = errorHandlers.get(e);
+        if (handler == null)
+        {
+            handler = new DefaultRequestErrorHandler();
+        }
+        handler.setException(e);
+        return handler;
+    }
+
+    private static String getOkResult()
+    {
+        return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
+                .withHeader(ApplicationContext.getText("requesthandler.operation.suceeded"))
+                .withClosingLink()
+                .render();
+    }
+
+    public static String renderConfirmationForm(HttpServletRequest request, ProcessEngine processEngine)
+    {
+        Long eventId = parseLong(request.getParameter(ServletRequestParameters.EVENT_ID));
+        Long helperId = parseLong(request.getParameter(ServletRequestParameters.HELPER_ID));
+        Long positionId = parseLong(request.getParameter(ServletRequestParameters.POSITION_ID));
+        boolean takeoverCallback = parseBoolean(request.getParameter(ServletRequestParameters.TAKEOVER_CALLBACK));
+
+        switch (ServletRequestContext.valueOf(request.getParameter(ServletRequestParameters.CONTEXT)))
+        {
+            case LEGACY_POS:
+                String legacyText = takeoverCallback
+                        ? ApplicationContext.getText("request.confirmation.legacy.yes")
+                        : ApplicationContext.getText("request.confirmation.legacy.no");
+                return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
+                        .withHeader("Bestätigung")
+                        .withParagraph(legacyText)
+                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, null, takeoverCallback)
+                        .render();
+            case CALLBACK:
+                HelperCallback helperCallback = HelperCallback.valueOf(request.getParameter(ServletRequestParameters.CALLBACK));
+                String confirmationText = null;
+                switch (helperCallback)
+                {
+                    case ADD_POSITION:
+                        confirmationText = ApplicationContext.getText("request.confirmation.add");
+                        break;
+                    case REMOVE_POSITION:
+                        confirmationText = ApplicationContext.getText("request.confirmation.remove");
+                        break;
+                    case MANUAL_ASSIGNMENT:
+                        confirmationText = ApplicationContext.getText("request.confirmation.man_assig");
+                        break;
+                    case NEVER_AGAIN:
+                        confirmationText = ApplicationContext.getText("request.confirmation.never_again");
+                        break;
+                    case NOT_THIS_TIME:
+                        confirmationText = ApplicationContext.getText("request.confirmation.pause");
+                        break;
+                    default:
+                        break;
+                }
+                return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
+                        .withHeader("Bestätigung")
+                        .withParagraph(confirmationText)
+                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, helperCallback, takeoverCallback)
+                        .render();
+            default:
+                // will not occur
+                return null;
+        }
+    }
+
+    private static boolean parseBoolean(String value)
+    {
+        // TODO
+        if (StringUtilMethods.isBlank(value))
+        {
+            return false;
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    private static Long parseLong(String value)
+    {
+        // TODO do we need this?
+        if (StringUtilMethods.isBlank(value))
+        {
+            return null;
+        }
+        value = value.replaceAll("\\.", "");
+        value = value.replaceAll("\\,", "");
+        return Long.parseLong(value);
+    }
+}

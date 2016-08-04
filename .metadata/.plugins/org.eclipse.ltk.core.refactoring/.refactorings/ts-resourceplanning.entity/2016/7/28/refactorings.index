@@ -1,0 +1,26 @@
+1468343002595	Rename type 'DateHelper'
+1468343242946	Rename type 'StringUtil'
+1468343455313	Rename type 'MuppiDateHelper'
+1468343468687	Rename type 'MuppiStringUtil'
+1468348147091	Delete element
+1468348159746	Delete element
+1468350315685	Change method 'createMessage'
+1468351072985	Move compilation units
+1468351181694	Delete element
+1468354042446	Extract local variable 'fileName'
+1468358136707	Extract method 'file'
+1468358167445	Rename method 'file'
+1468358176544	Rename method 'writeFile'
+1468358205905	Rename method 'writeToFile'
+1468358215131	Rename method 'writeToTempFile'
+1468358274398	Rename local variable 'aBody'
+1468396881475	Extract local variable 'context'
+1468397512556	Change method 'createMessage'
+1468397901116	Move compilation units
+1468397910642	Move compilation unit
+1468397914665	Delete element
+1468401899033	Extract local variable 'unassignedPositions'
+1468401925244	Rename local variable 'pos'
+1468402528282	Rename local variable 'files'
+1468424888518	Extract local variable 'eventPosition'
+1468702476794	Rename method 'getTextResource'
