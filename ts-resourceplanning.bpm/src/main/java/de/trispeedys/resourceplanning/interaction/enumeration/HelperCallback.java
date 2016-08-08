@@ -10,5 +10,7 @@ public enum HelperCallback
     
     REMOVE_POSITION,
     
-    MANUAL_ASSIGNMENT
+    EARMARK_POSITION,
+    
+    MANUAL_ASSIGNMENT 
 }

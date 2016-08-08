@@ -96,7 +96,40 @@ public class Assignment extends AbstractDbObject implements ClonableEntity<Assig
     @EntitySaveListener(operationType = DbOperationType.PERSIST_AND_UPDATE, errorKey = VALIDATION_HELPER_POSITION_OVERLAP)
     public boolean checkOverlapWithOtherHelperPositions()
     {
+        if (isCancelled())
+        {
+            // we dont care if a cancelled position
+            // overlaps another position...
+            return true;
+        }
+        
+        // get all active assignments
+        List<Assignment> activeAssignments = RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(getEvent(), getHelper(), null);
+        
+        // check overlap with 'this'
+        for (Assignment activeAssignment : activeAssignments)
+        {
+            if (activeAssignment.getEventPosition().overlaps(eventPosition))
+            {
+                return false;
+            }
+        }
+        
         return true;
+    }
+
+    private boolean isCancelled()
+    {
+        return (assignmentState.equals(AssignmentState.CANCELLED));
+    }
+
+    public Event getEvent()
+    {
+        if (eventPosition == null)
+        {
+            return null;
+        }
+        return eventPosition.getEvent();
     }
 
     public void cancel(SessionToken sessionToken)

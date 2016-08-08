@@ -46,8 +46,8 @@ public class AssignmentRepository extends AbstractDatabaseRepository<Assignment>
         return result;
     }
 
-    public Assignment findByHelperAndEventPosition(Helper helper, EventPosition eventPosition, SessionToken sessionToken)
+    public List<Assignment> findActiveByHelperAndEventPosition(Helper helper, EventPosition eventPosition, SessionToken sessionToken)
     {
-        return dataSource().findSingle(sessionToken, PARAM_HELPER, helper, PARAM_EVENT_POSITION, eventPosition);
+        return dataSource().find(sessionToken, PARAM_HELPER, helper, PARAM_EVENT_POSITION, eventPosition, PARAM_ASSIGNMENT_STATE, AssignmentState.ACTIVE);
     }
 }

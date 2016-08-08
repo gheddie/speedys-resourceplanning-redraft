@@ -9,6 +9,7 @@ import org.camunda.bpm.engine.ProcessEngine;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.context.BpmMessages;
 import de.trispeedys.resourceplanning.context.BpmVariables;
+import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.util.BpmKeyGenerator;
@@ -17,6 +18,11 @@ public class HelperInteraction
 {
     public synchronized static void processHelperCallback(HelperCallback helperCallback, Long helperId, Long eventId, Long positionId, ProcessEngine processEngine)
     {
+        if ((helperCallback != null) && (helperCallback.equals(HelperCallback.EARMARK_POSITION)))
+        {
+            throw new ResourcePlanningException("");
+        }
+        
         processEngine = ensureProcessEngineSet(processEngine);
         
         // correlate the message

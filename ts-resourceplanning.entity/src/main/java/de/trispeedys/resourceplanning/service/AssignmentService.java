@@ -40,13 +40,29 @@ public class AssignmentService
         {
             throw new ResourcePlanningException("can not cancel helper --> position '" + position + "' is not a position in event '" + event + "'!!");
         }
-        Assignment assignment =
-                RepositoryProvider.getRepository(AssignmentRepository.class).findByHelperAndEventPosition(helper, eventPosition, sessionToken);
+        Assignment assignment = AssignmentService.findActiveAssignment(helper, eventPosition, sessionToken);
         if (assignment == null)
         {
             throw new ResourcePlanningException("can not cancel helper --> no assignment found for position '" + position + "'!!");
         }
         assignment.cancel(sessionToken);
+    }
+
+    public static Assignment findActiveAssignment(Helper helper, EventPosition eventPosition, SessionToken sessionToken)
+    {
+        // all assignments for helper and event position (of multiple assignments states)
+        List<Assignment> assignments =
+                RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByHelperAndEventPosition(helper, eventPosition, sessionToken);
+        
+        if ((assignments == null) || (assignments.size() == 0))
+        {
+            return null;
+        }
+        if (assignments.size() > 1)
+        {
+            throw new ResourcePlanningException("more than one active assignment for helper and event position!");
+        }
+        return assignments.get(0);
     }
 
     /**

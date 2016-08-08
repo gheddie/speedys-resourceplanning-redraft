@@ -18,29 +18,32 @@ import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
 import de.trispeedys.resourceplanning.interaction.enumeration.ServletRequestContext;
 import de.trispeedys.resourceplanning.repository.EventDayRepository;
 import de.trispeedys.resourceplanning.repository.EventPositionRepository;
+import de.trispeedys.resourceplanning.util.DateHelperMethods;
+import de.trispeedys.resourceplanning.util.LoadFactor;
 import de.trispeedys.resourceplanning.util.ServletRequestParameters;
 
 public class HtmlGenerator
 {
     private static final String COLOR_OFF = "#ffffff";
-    
+
     private static final String COLOR_ON_ASSIGNED = "#ff0000";
-    
+
     private static final String COLOR_ON_UNASSIGNED = "#cccccc";
 
-    public static final String MACHINE_MESSAGE = "machineMessage";
+    private static final String COLOR_ON_SATURATED = "#00ff00";
 
-    // private static final boolean ADD_CSS = true;
+    public static final String MACHINE_MESSAGE = "machineMessage";
 
     private StringBuffer buffer;
 
     private boolean renderNoReply;
-    
+
     private enum RowOption
     {
         ASSIGNABLE,
         CANCELABLE,
-        NONE
+        NONE,
+        COMPLETELY_BOOKED
     }
 
     public HtmlGenerator(boolean aRenderNoReply, boolean useCss)
@@ -90,7 +93,7 @@ public class HtmlGenerator
             buffer.append("</style>");
             buffer.append("</head>");
         }
-        
+
     }
 
     public HtmlGenerator()
@@ -140,16 +143,18 @@ public class HtmlGenerator
         }
         return this;
     }
-    
+
     public HtmlGenerator withList(List<String> items, boolean ordered)
     {
-        String tag = (ordered ? "ol" : "ul");
-        buffer.append("<"+tag+">");
+        String tag = (ordered
+                ? "ol"
+                : "ul");
+        buffer.append("<" + tag + ">");
         for (String item : items)
         {
-            buffer.append("<li>"+item+"</li>");
+            buffer.append("<li>" + item + "</li>");
         }
-        buffer.append("</"+tag+">");
+        buffer.append("</" + tag + ">");
         return this;
     }
 
@@ -169,7 +174,10 @@ public class HtmlGenerator
 
     public HtmlGenerator withClosingLink()
     {
+        // TODO how to do it ?
+
         buffer.append("<a href=\"#\" onclick=\"javascript:window.close();\">" + ApplicationContext.getText("app.close") + "</a>");
+        // buffer.append("<a href=\"javascript:window.close()\">" + ApplicationContext.getText("app.close") + "</a>");
         newLine();
         return this;
     }
@@ -208,20 +216,17 @@ public class HtmlGenerator
      * @param helperId
      * @param helperCallback
      * @param positionId
-     * @param takeoverCallback 
+     * @param takeoverCallback
      * @return
      */
     public HtmlGenerator withSimpleButtonForm(String target, String buttonText, Long eventId, Long helperId, Long positionId,
-            HelperCallback helperCallback, boolean takeoverCallback)
+            HelperCallback helperCallback, boolean takeoverCallback, ServletRequestContext requestContext)
     {
         MessageFormat mf = new MessageFormat("<form action =\"{0}\">" +
-                "<input type=\"submit\" value=\"{1}\">" + 
-                "<input type=\"hidden\" name=\"{2}\" value=\"{3}\">" +
-                "<input type=\"hidden\" name=\"{4}\" value=\"{5}\">" +
-                "<input type=\"hidden\" name=\"{6}\" value=\"{7}\">" +
-                "<input type=\"hidden\" name=\"{8}\" value=\"{9}\">" +
-                "<input type=\"hidden\" name=\"{10}\" value=\"{11}\">" +
-                "</form>");
+                "<input type=\"submit\" value=\"{1}\">" + "<input type=\"hidden\" name=\"{2}\" value=\"{3}\">" +
+                "<input type=\"hidden\" name=\"{4}\" value=\"{5}\">" + "<input type=\"hidden\" name=\"{6}\" value=\"{7}\">" +
+                "<input type=\"hidden\" name=\"{8}\" value=\"{9}\">" + "<input type=\"hidden\" name=\"{10}\" value=\"{11}\">" +
+                "<input type=\"hidden\" name=\"{12}\" value=\"{13}\">" + "</form>");
         buffer.append(mf.format(new Object[]
         {
                 target,
@@ -235,12 +240,14 @@ public class HtmlGenerator
                 ServletRequestParameters.CALLBACK,
                 helperCallback,
                 ServletRequestParameters.TAKEOVER_CALLBACK,
-                takeoverCallback
+                takeoverCallback,
+                ServletRequestParameters.CONTEXT,
+                requestContext
         }));
         newLine();
         return this;
     }
-    
+
     public void withBookingOverview(Event event, Helper helper, int tableWidth, String baseLink, List<Position> assignedPositions,
             List<Position> helperAssignablePositions)
     {
@@ -264,16 +271,17 @@ public class HtmlGenerator
         {
             buffer.append("<th align=\"left\" colspan=\"3\" width=\"120\">" + hour + "</th</tr>");
         }
-        buffer.append("<th align=\"left\" colspan=\"3\" width=\"200\">Aktion</th</tr>");
+        buffer.append("<th align=\"left\" colspan=\"1\" width=\"50\">Auslastung</th</tr>");
+        buffer.append("<th align=\"left\" colspan=\"1\" width=\"200\">Aktion</th</tr>");
         buffer.append("</tr>");
         RowOption rowOption = null;
-        
+
         boolean firstRowOfEventDay = false;
-        
+
         for (EventDay eventDay : RepositoryProvider.getRepository(EventDayRepository.class).findByEvent(event, null))
         {
             firstRowOfEventDay = true;
-            
+
             for (EventPosition eventPosition : RepositoryProvider.getRepository(EventPositionRepository.class).findByEventDay(eventDay, null))
             {
                 if (assignedPositionsSet.contains(eventPosition.getPosition().getId()))
@@ -283,45 +291,69 @@ public class HtmlGenerator
                 }
                 else if (helperAssignablePositionsSet.contains(eventPosition.getPosition().getId()))
                 {
-                    // to be assigned
-                    rowOption = RowOption.ASSIGNABLE;
+                    // to be assigned (if not completely booked)
+                    if (eventPosition.isCompletelyBooked())
+                    {
+                        rowOption = RowOption.COMPLETELY_BOOKED;
+                    }
+                    else
+                    {
+                        rowOption = RowOption.ASSIGNABLE;
+                    }
                 }
                 else
                 {
                     // none
                     rowOption = RowOption.NONE;
-                }                
+                }
                 buildPositionRow(eventDay, helper, baseLink, eventPosition, rowOption, firstRowOfEventDay);
                 firstRowOfEventDay = false;
-            }    
+            }
         }
-        
+
         buffer.append("</table>");
     }
 
-    private void buildPositionRow(EventDay eventDay, Helper helper, String baseLink, EventPosition eventPosition, RowOption rowOption, boolean firstRowOfEventDay)
+    private void buildPositionRow(EventDay eventDay, Helper helper, String baseLink, EventPosition eventPosition, RowOption rowOption,
+            boolean firstRowOfEventDay)
     {
         Position position = eventPosition.getPosition();
-        
+
         buffer.append("<tr>");
-        buffer.append(firstRowOfEventDay ? "<td nowrap=\"true\">"+eventDay.getPlannedDate()+"</td>" : "<td nowrap=\"true\">&nbsp;</td>");
-        buffer.append("<td nowrap=\"true\">"+position.getName()+"</td>");
-        buffer.append("<td>"+eventPosition.getHourOfStart()+"</td>");
-        buffer.append("<td>"+eventPosition.getHourOfEnd()+"</td>");
-        String colorStr = "";
-        for (int hour=0;hour<=23;hour++)
+        buffer.append(firstRowOfEventDay
+                ? "<td nowrap=\"true\">" + DateHelperMethods.formatLocalDate(eventDay.getPlannedDate()) + "</td>"
+                : "<td nowrap=\"true\">&nbsp;</td>");
+        buffer.append("<td nowrap=\"true\">" + position.getName() + "</td>");
+        buffer.append("<td>" + eventPosition.getHourOfStart() + "</td>");
+        buffer.append("<td>" + eventPosition.getHourOfEnd() + "</td>");
+        String colorStr = "123456";
+        for (int hour = 0; hour <= 23; hour++)
         {
             switch (rowOption)
             {
                 case ASSIGNABLE:
-                    colorStr = eventPosition.includesHourOfDay(hour) ? COLOR_ON_UNASSIGNED : COLOR_OFF;
+                    colorStr = eventPosition.includesHourOfDay(hour)
+                            ? COLOR_ON_UNASSIGNED
+                            : COLOR_OFF;
                     break;
                 case CANCELABLE:
-                    colorStr = eventPosition.includesHourOfDay(hour) ? COLOR_ON_ASSIGNED : COLOR_OFF;
-                    break;                    
-            }            
-            buffer.append("<td colspan=\"1\" style=\"background-color:"+colorStr+";\">&nbsp;</td>");    
+                    colorStr = eventPosition.includesHourOfDay(hour)
+                            ? COLOR_ON_ASSIGNED
+                            : COLOR_OFF;
+                    break;
+                case COMPLETELY_BOOKED:
+                    colorStr = eventPosition.includesHourOfDay(hour)
+                            ? COLOR_ON_SATURATED
+                            : COLOR_OFF;
+                    break;
+                case NONE:
+                    colorStr = COLOR_OFF;
+                    break;
+            }
+            buffer.append("<td colspan=\"1\" style=\"background-color:" + colorStr + ";\">&nbsp;</td>");
         }
+        LoadFactor loadFactor = eventPosition.getLoadFactor();
+        buffer.append("<td>" + loadFactor.getNumerator() + "/" + loadFactor.getDenominator() + "</td>");
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(ServletRequestParameters.EVENT_ID, eventDay.getEvent().getId());
         parameters.put(ServletRequestParameters.HELPER_ID, helper.getId());
@@ -329,17 +361,24 @@ public class HtmlGenerator
         parameters.put(ServletRequestParameters.CONTEXT, ServletRequestContext.CALLBACK);
         String link = null;
         String linkText = "";
+        String domainName = eventPosition.getPosition().getName();
+        String positionName = eventPosition.getPosition().getDomain().getName();
         switch (rowOption)
         {
             case ASSIGNABLE:
                 parameters.put(ServletRequestParameters.CALLBACK, HelperCallback.ADD_POSITION);
                 link = new LinkGenerator(baseLink, RequestHandler.GENERIC_REQUEST_RECEIVER, parameters).generate();
-                linkText = "Buchen";
+                linkText = ApplicationContext.getText("helpercallback.linkname.book", positionName, domainName);
                 break;
             case CANCELABLE:
                 parameters.put(ServletRequestParameters.CALLBACK, HelperCallback.REMOVE_POSITION);
                 link = new LinkGenerator(baseLink, RequestHandler.GENERIC_REQUEST_RECEIVER, parameters).generate();
-                linkText = "Kündigen";
+                linkText = ApplicationContext.getText("helpercallback.linkname.cancel", positionName, domainName);
+                break;
+            case COMPLETELY_BOOKED:
+                parameters.put(ServletRequestParameters.CALLBACK, HelperCallback.EARMARK_POSITION);
+                link = new LinkGenerator(baseLink, RequestHandler.GENERIC_REQUEST_RECEIVER, parameters).generate();
+                linkText = ApplicationContext.getText("helpercallback.linkname.earmark", positionName, domainName);
                 break;
             case NONE:
                 link = null;
@@ -347,7 +386,7 @@ public class HtmlGenerator
         }
         if (link != null)
         {
-            buffer.append("<td><a href=\""+link+"\">"+linkText+"</a></td>");    
+            buffer.append("<td><a href=\"" + link + "\">" + linkText + "</a></td>");
         }
         else
         {
@@ -367,7 +406,7 @@ public class HtmlGenerator
     {
         buffer.append("\n");
     }
-    
+
     public String render()
     {
         if (renderNoReply)

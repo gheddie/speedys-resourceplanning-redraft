@@ -88,7 +88,8 @@ public class RequestHandler
         Long positionId = parseLong(request.getParameter(ServletRequestParameters.POSITION_ID));
         boolean takeoverCallback = parseBoolean(request.getParameter(ServletRequestParameters.TAKEOVER_CALLBACK));
 
-        switch (ServletRequestContext.valueOf(request.getParameter(ServletRequestParameters.CONTEXT)))
+        ServletRequestContext requestContext = ServletRequestContext.valueOf(request.getParameter(ServletRequestParameters.CONTEXT));
+        switch (requestContext)
         {
             case LEGACY_POS:
                 String legacyText = takeoverCallback
@@ -97,7 +98,7 @@ public class RequestHandler
                 return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
                         .withHeader("Bestätigung")
                         .withParagraph(legacyText)
-                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, null, takeoverCallback)
+                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, null, takeoverCallback, requestContext)
                         .render();
             case CALLBACK:
                 HelperCallback helperCallback = HelperCallback.valueOf(request.getParameter(ServletRequestParameters.CALLBACK));
@@ -109,6 +110,9 @@ public class RequestHandler
                         break;
                     case REMOVE_POSITION:
                         confirmationText = ApplicationContext.getText("request.confirmation.remove");
+                        break;
+                    case EARMARK_POSITION:
+                        confirmationText = ApplicationContext.getText("request.confirmation.earmark");
                         break;
                     case MANUAL_ASSIGNMENT:
                         confirmationText = ApplicationContext.getText("request.confirmation.man_assig");
@@ -125,7 +129,7 @@ public class RequestHandler
                 return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
                         .withHeader("Bestätigung")
                         .withParagraph(confirmationText)
-                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, helperCallback, takeoverCallback)
+                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, helperCallback, takeoverCallback, requestContext)
                         .render();
             default:
                 // will not occur

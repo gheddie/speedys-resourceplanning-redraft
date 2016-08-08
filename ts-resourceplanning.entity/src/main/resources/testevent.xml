@@ -37,7 +37,7 @@
 		<Domain name="Laufstrecke">
 			<Positions>
 				<Position name="Absperrung Herrenfeldtstrasse" minimalAge="16"
-					requiredHelperCount="2" day="1" starthour="12" endhour="14" key="S5">
+					requiredHelperCount="1" day="1" starthour="12" endhour="14" key="S5">
 					<HelperAllocations />
 				</Position>
 				<Position name="Laufverpflegung" minimalAge="16"

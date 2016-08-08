@@ -16,6 +16,7 @@ import de.trispeedys.resourceplanning.entity.EventDay;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.enumeration.EventState;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.service.AssignmentService;
@@ -51,6 +52,11 @@ public class XmlEventParser
     }
     
     public Event parse(String fileName)
+    {
+        return parse(fileName, EventState.FINISHED);
+    }
+    
+    public Event parse(String fileName, EventState targetEventState)
     {
         SessionHolder sessionHolder = SessionManager.getInstance().registerSession(this, null);
         try

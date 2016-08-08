@@ -92,12 +92,17 @@ public class ApplicationContext
         return configurationValues.get(key);
     }
     
+    public static String getText(String key)
+    {
+        return getText(key, null);
+    }
+    
     public static String getText(String key, Object... parameters)
     {
         return getInstance().getTextResource(key, parameters);
     }
 
-    public String getTextResource(String key, Object... parameters)
+    private String getTextResource(String key, Object... parameters)
     {
         String resource = textResources.getProperty(key);
         if (StringUtil.isBlank(resource))

@@ -19,17 +19,16 @@ import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.context.ApplicationContext;
 import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.entity.Event;
-import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueueItem;
+import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
-import de.trispeedys.resourceplanning.repository.EventRepository;
-import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.MessageQueueItemRepository;
 import de.trispeedys.resourceplanning.service.EventService;
 import de.trispeedys.resourceplanning.util.BpmKeyGenerator;
 import de.trispeedys.resourceplanning.util.ProcessHelper;
 import de.trispeedys.resourceplanning.util.ResourcePlanningHelper;
+import de.trispeedys.resourceplanning.util.StringUtil;
 import de.trispeedys.resourceplanning.util.TestUtil;
 import de.trispeedys.resourceplanning.util.XmlEventParser;
 
@@ -72,6 +71,10 @@ public class ResourcePlanningWebService
 
     public synchronized void setupXml(String fileName)
     {
+        if (StringUtil.isBlank(fileName))
+        {
+            throw new ResourcePlanningException(ApplicationContext.getText("exception.webservice.resource.blank"));
+        }
         TestUtil.clearAll();
         killAllExecutions();
         Event event = new XmlEventParser().parse(fileName);
@@ -80,8 +83,12 @@ public class ResourcePlanningWebService
         ApplicationContext.getInstance().getMessageSender().prepare();
     }
     
-    public synchronized void setupXmlWithLegacy(String fileName)
+    public synchronized void setupXmlWithLegacy(String fileName, boolean startEeventPlanning)
     {
+        if (StringUtil.isBlank(fileName))
+        {
+            throw new ResourcePlanningException(ApplicationContext.getText("exception.webservice.resource.blank"));
+        }
         TestUtil.clearAll();
         killAllExecutions();
         Event legacyEvent = new XmlEventParser().parse(fileName);
@@ -89,9 +96,12 @@ public class ResourcePlanningWebService
         List<LocalDate> days = new ArrayList<LocalDate>();
         days.add(new LocalDate(2018, 6, 14));
         days.add(new LocalDate(2018, 6, 15));
-        EventService.duplicateEvent(legacyEvent, "TRI-NEU", days, false);
-        
+        Event duplicated = EventService.duplicateEvent(legacyEvent, "TRI-NEU", days, false);
         ApplicationContext.getInstance().getMessageSender().prepare();
+        if (startEeventPlanning)
+        {
+            ProcessHelper.startEventPlanning(duplicated.getId());
+        }
     }
 
     public synchronized void setup()
@@ -130,17 +140,6 @@ public class ResourcePlanningWebService
         for (MessageQueueItem message : RepositoryProvider.getRepository(MessageQueueItemRepository.class).findUnprocessedMessages(null))
         {
             // ApplicationContext.getInstance().sendMessage(message);
-        }
-    }
-
-    public void startEventPlanning(Long eventId)
-    {
-        // TODO make sure the event exists and stuff like that
-
-        for (Helper activeHelper : RepositoryProvider.getRepository(HelperRepository.class).findActiveHelpers(null))
-        {
-            ProcessHelper.startMailReminderProcess(BpmPlatform.getDefaultProcessEngine().getRuntimeService(),
-                    RepositoryProvider.getRepository(EventRepository.class).findById(eventId), activeHelper);
         }
     }
 }

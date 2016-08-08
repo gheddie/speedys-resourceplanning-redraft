@@ -14,8 +14,12 @@ import org.joda.time.LocalDate;
 
 import de.gravitex.hibernateadapter.core.annotation.DbOperationType;
 import de.gravitex.hibernateadapter.core.annotation.EntitySaveListener;
+import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.gravitex.hibernateadapter.entity.AbstractDbObject;
+import de.trispeedys.resourceplanning.Pair;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
+import de.trispeedys.resourceplanning.repository.AssignmentRepository;
+import de.trispeedys.resourceplanning.util.LoadFactor;
 
 @Entity
 @Table(name = "event_position")
@@ -134,10 +138,10 @@ public class EventPosition extends AbstractDbObject implements ClonableEntity<Ev
                 0);
         return new Interval(startTime, endTime);
     }
-    
+
     public boolean overlaps(EventPosition other)
     {
-        if (!(eventDay == other.getEventDay()))
+        if (!(eventDay.equals(other.getEventDay())))
         {
             // not on the same day, so...
             return false;
@@ -152,6 +156,22 @@ public class EventPosition extends AbstractDbObject implements ClonableEntity<Ev
 
     public boolean includesHourOfDay(int hour)
     {
-        return ((hour >= hourOfStart) && (hour <= (hourOfEnd-1)));
+        return ((hour >= hourOfStart) && (hour <= (hourOfEnd - 1)));
+    }
+
+    public LoadFactor getLoadFactor()
+    {
+        return new LoadFactor(RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventPosition(this, null).size(),
+                getPosition().getRequiredHelperCount());
+    }
+    
+    public boolean isCompletelyBooked()
+    {
+        return getLoadFactor().isSaturated();
+    }
+    
+    public String toString()
+    {
+        return getClass().getSimpleName() + " [von:"+hourOfStart+"|bis:"+hourOfEnd+"|pos:"+getPosition()+"]";
     }
 }

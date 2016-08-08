@@ -39,7 +39,7 @@ public class PositionService
      * @param sessionToken
      * @return
      */
-    public static List<Position> getUnassignedPositions(Event event, SessionToken sessionToken)
+    public static List<Position> getUnassignedPositions(Event event, SessionToken sessionToken, boolean ignoreCompletelyBookedPositions)
     {
         List<Position> result = new ArrayList<Position>();
         AssignmentRepository assignmentRepository = RepositoryProvider.getRepository(AssignmentRepository.class);
@@ -49,8 +49,17 @@ public class PositionService
         {
             activeAssignments = assignmentRepository.findActiveByEventPosition(eventPosition, sessionToken);
             position = eventPosition.getPosition();
-            if (activeAssignments.size() < position.getRequiredHelperCount())
+            if (ignoreCompletelyBookedPositions)
             {
+                // only add the position if there is still at least one place left
+                if (activeAssignments.size() < position.getRequiredHelperCount())
+                {
+                    result.add(position);
+                }
+            }
+            else
+            {
+                // just add it
                 result.add(position);
             }
         }
@@ -71,7 +80,7 @@ public class PositionService
     {
         // TODO
         List<Position> assignedPositionsForHelper = getAssignedPositions(event, helper, sessionToken);
-        List<Position> unassignedPositions = getUnassignedPositions(event, sessionToken);
+        List<Position> unassignedPositions = getUnassignedPositions(event, sessionToken, false);
         List<Position> result = new ArrayList<Position>();
         for (Position unassignedPosition : unassignedPositions)
         {

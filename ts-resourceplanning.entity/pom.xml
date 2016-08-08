@@ -15,6 +15,11 @@
 			<version>1.0.0-FINAL</version>
 		</dependency>
 		<dependency>
+			<groupId>de.trispeedys.resourceplanning</groupId>
+			<artifactId>ts-resourceplanning.util</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.jadira.usertype</groupId>
 			<artifactId>usertype.core</artifactId>
 			<version>3.1.0.CR1</version>
