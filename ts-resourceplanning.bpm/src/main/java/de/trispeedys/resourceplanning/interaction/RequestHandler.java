@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.camunda.bpm.engine.ProcessEngine;
 
 import de.trispeedys.resourceplanning.interaction.errorhandler.DefaultRequestErrorHandler;
+import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.context.ApplicationContext;
+import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
 import de.trispeedys.resourceplanning.interaction.enumeration.ServletRequestContext;
 import de.trispeedys.resourceplanning.interaction.errorhandler.AbstractRequestErrorHandler;
@@ -37,8 +40,11 @@ public class RequestHandler
             case LEGACY_POS:
                 try
                 {
-                    HelperInteraction.processLegacyPositionTakeover(helperId, eventId, processEngine);
-                    return getOkResult();
+                    boolean takeOver = parseBoolean(request.getParameter(ServletRequestParameters.TAKEOVER_CALLBACK));
+                    HelperInteraction.processLegacyPositionTakeover(helperId, eventId, takeOver, processEngine);
+                    return getOkResult(takeOver
+                            ? ApplicationContext.getText("request.ok.pos.takeover.accepted")
+                            : ApplicationContext.getText("request.ok.pos.takeover.declined"));
                 }
                 catch (Exception e)
                 {
@@ -50,7 +56,32 @@ public class RequestHandler
                     HelperCallback helperCallback = HelperCallback.valueOf(request.getParameter(ServletRequestParameters.CALLBACK));
                     Long positionId = parseLong(request.getParameter(ServletRequestParameters.POSITION_ID));
                     HelperInteraction.processHelperCallback(helperCallback, helperId, eventId, positionId, processEngine);
-                    return getOkResult();
+                    String message = null;
+                    Position position = RepositoryProvider.getRepository(PositionRepository.class).findById(positionId);
+                    switch (helperCallback)
+                    {
+                        case ADD_POSITION:
+                            message = ApplicationContext.getText("request.ok.pos.added", position.getName());
+                            break;
+                        case REMOVE_POSITION:
+                            message = ApplicationContext.getText("request.ok.pos.removed", position.getName());
+                            break;
+                        case EARMARK_POSITION:
+                            message = ApplicationContext.getText("request.ok.pos.earmarked", position.getName());
+                            break;
+                        case MANUAL_ASSIGNMENT:
+                            message = ApplicationContext.getText("request.ok.man.assig");
+                            break;
+                        case NEVER_AGAIN:
+                            message = ApplicationContext.getText("request.ok.never.again");
+                            break;
+                        case NOT_THIS_TIME:
+                            message = ApplicationContext.getText("request.ok.not.this.time");
+                            break;
+                        default:
+                            break;
+                    }
+                    return getOkResult(message);
                 }
                 catch (Exception e)
                 {
@@ -73,10 +104,11 @@ public class RequestHandler
         return handler;
     }
 
-    private static String getOkResult()
+    private static String getOkResult(String message)
     {
         return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
                 .withHeader(ApplicationContext.getText("requesthandler.operation.suceeded"))
+                .withParagraph(message)
                 .withClosingLink()
                 .render();
     }
@@ -103,16 +135,17 @@ public class RequestHandler
             case CALLBACK:
                 HelperCallback helperCallback = HelperCallback.valueOf(request.getParameter(ServletRequestParameters.CALLBACK));
                 String confirmationText = null;
+                Position position = RepositoryProvider.getRepository(PositionRepository.class).findById(positionId);
                 switch (helperCallback)
                 {
                     case ADD_POSITION:
-                        confirmationText = ApplicationContext.getText("request.confirmation.add");
+                        confirmationText = ApplicationContext.getText("request.confirmation.add", position.getName(), position.getDomain().getName());
                         break;
                     case REMOVE_POSITION:
-                        confirmationText = ApplicationContext.getText("request.confirmation.remove");
+                        confirmationText = ApplicationContext.getText("request.confirmation.remove", position.getName(), position.getDomain().getName());
                         break;
                     case EARMARK_POSITION:
-                        confirmationText = ApplicationContext.getText("request.confirmation.earmark");
+                        confirmationText = ApplicationContext.getText("request.confirmation.earmark", position.getName(), position.getDomain().getName());
                         break;
                     case MANUAL_ASSIGNMENT:
                         confirmationText = ApplicationContext.getText("request.confirmation.man_assig");
@@ -129,7 +162,8 @@ public class RequestHandler
                 return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
                         .withHeader("Bestätigung")
                         .withParagraph(confirmationText)
-                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, helperCallback, takeoverCallback, requestContext)
+                        .withSimpleButtonForm(GENERIC_CONFIRM_RECEIVER, "OK", eventId, helperId, positionId, helperCallback, takeoverCallback,
+                                requestContext)
                         .render();
             default:
                 // will not occur

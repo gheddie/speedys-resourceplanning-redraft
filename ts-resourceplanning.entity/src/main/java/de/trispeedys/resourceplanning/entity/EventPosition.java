@@ -6,7 +6,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -16,7 +15,6 @@ import de.gravitex.hibernateadapter.core.annotation.DbOperationType;
 import de.gravitex.hibernateadapter.core.annotation.EntitySaveListener;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.gravitex.hibernateadapter.entity.AbstractDbObject;
-import de.trispeedys.resourceplanning.Pair;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
 import de.trispeedys.resourceplanning.util.LoadFactor;
@@ -25,7 +23,7 @@ import de.trispeedys.resourceplanning.util.LoadFactor;
 @Table(name = "event_position")
 public class EventPosition extends AbstractDbObject implements ClonableEntity<EventPosition>
 {
-    private static final String VALIDATION_TIMERANGE_INVALID = "time range (@hourOfStart@-@hourOfEnd@) is invalid!!";
+    private static final String VALIDATION_TIMERANGE_INVALID = "validation.timerange.invalid";
 
     @OneToOne
     @JoinColumn(name = "event_id")

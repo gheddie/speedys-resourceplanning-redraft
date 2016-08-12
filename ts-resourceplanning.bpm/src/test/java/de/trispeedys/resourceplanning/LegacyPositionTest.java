@@ -33,10 +33,42 @@ public class LegacyPositionTest
 
     @Rule
     public ProcessEngineRule processEngine = new ProcessEngineRule();
+    
+    /**
+     * On refusing legacy position take over,
+     * there must nor be any assignments to the helper
+     * after starting the request process.
+     */
+    @Test
+    @Deployment(resources = "MailReminderProcess.bpmn")
+    public void testRefuseLegacyPositionsTakeover()
+    {
+        TestUtil.clearAll();
+
+        // create a legacy event
+        Event legacyEvent = new XmlEventParser().parse("testevent.xml");
+        
+        // duplicate it
+        List<LocalDate> days = new ArrayList<LocalDate>();
+        days.add(new LocalDate(2018, 6, 14));
+        days.add(new LocalDate(2018, 6, 15));
+        Event actualEvent = EventService.duplicateEvent(legacyEvent, "TRI-NEU", days, false);
+        
+        // start a process
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        Helper helper = RepositoryProvider.getRepository(HelperRepository.class).findByCode("H1H113021990", null);
+        ProcessHelper.startMailReminderProcess(runtimeService, actualEvent, helper);
+        
+        // decline position take over
+        HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), false, processEngine.getProcessEngine());
+        
+        // there must be no assignments for the given helper in the given event
+        assertEquals(0, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(actualEvent, helper, null).size());
+    }
 
     @Test
     @Deployment(resources = "MailReminderProcess.bpmn")
-    public void testLegacyPositions()
+    public void testRemovedLegacyPositions()
     {
         TestUtil.clearAll();
 
@@ -63,7 +95,7 @@ public class LegacyPositionTest
         
         // 'H1H113021990' was assigned to 'S4' and 'S6' in the former event, but 'S6' was excluded from the actual event
         // as there still is a legacy position for the given helper ('S4'), he wants to retake it...
-        HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), processEngine.getProcessEngine());
+        HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), true, processEngine.getProcessEngine());
         
         // now, the is on helper assignment in the actual event ('S4')...
         assertEquals(1, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(actualEvent, helper, null).size());

@@ -22,9 +22,9 @@ import de.trispeedys.resourceplanning.repository.AssignmentRepository;
 @Entity
 public class Assignment extends AbstractDbObject implements ClonableEntity<Assignment>
 {
-    private static final String VALIDATION_BOOKING_COUNT_EXCEEDED = "booking count exceeded for position!!";
+    private static final String VALIDATION_BOOKING_COUNT_EXCEEDED = "validation.booling.count.exceeded";
 
-    private static final String VALIDATION_HELPER_POSITION_OVERLAP = "overlap with other helper positions detected!!";
+    private static final String VALIDATION_HELPER_POSITION_OVERLAP = "validation.helper.position.overlap";
 
     @OneToOne
     @JoinColumn(name = "helper_id")

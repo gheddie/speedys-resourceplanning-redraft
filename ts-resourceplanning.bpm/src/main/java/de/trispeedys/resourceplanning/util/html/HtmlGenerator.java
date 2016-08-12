@@ -368,17 +368,17 @@ public class HtmlGenerator
             case ASSIGNABLE:
                 parameters.put(ServletRequestParameters.CALLBACK, HelperCallback.ADD_POSITION);
                 link = new LinkGenerator(baseLink, RequestHandler.GENERIC_REQUEST_RECEIVER, parameters).generate();
-                linkText = ApplicationContext.getText("helpercallback.linkname.book", positionName, domainName);
+                linkText = ApplicationContext.getText("helpercallback.linkname.book");
                 break;
             case CANCELABLE:
                 parameters.put(ServletRequestParameters.CALLBACK, HelperCallback.REMOVE_POSITION);
                 link = new LinkGenerator(baseLink, RequestHandler.GENERIC_REQUEST_RECEIVER, parameters).generate();
-                linkText = ApplicationContext.getText("helpercallback.linkname.cancel", positionName, domainName);
+                linkText = ApplicationContext.getText("helpercallback.linkname.cancel");
                 break;
             case COMPLETELY_BOOKED:
                 parameters.put(ServletRequestParameters.CALLBACK, HelperCallback.EARMARK_POSITION);
                 link = new LinkGenerator(baseLink, RequestHandler.GENERIC_REQUEST_RECEIVER, parameters).generate();
-                linkText = ApplicationContext.getText("helpercallback.linkname.earmark", positionName, domainName);
+                linkText = ApplicationContext.getText("helpercallback.linkname.earmark");
                 break;
             case NONE:
                 link = null;

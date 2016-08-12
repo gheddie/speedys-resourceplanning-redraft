@@ -71,11 +71,12 @@ public class EntityFormatter
             hoursString += StringUtilMethods.fillTo(String.valueOf(hour), HOUR_TICKS, " ");
         }
         rangeString += "|";
-        MessageFormat mf = new MessageFormat("[POSITION:{0} [{1} Stellen] ({2} - {3})]");
+        MessageFormat mf = new MessageFormat("[POSITION:{0} (KEY:{1}) [{2} Stellen] ({3} - {4})]");
         int requiredHelperCount = eventPosition.getPosition().getRequiredHelperCount();
         String infoString = mf.format(new Object[]
         {
                 eventPosition.getPosition().getName(),
+                eventPosition.getPosition().getPosKey(),
                 requiredHelperCount,
                 DateHelperMethods.formatDateTime(eventPosition.getTimeRange().getStart()),
                 DateHelperMethods.formatDateTime(eventPosition.getTimeRange().getEnd())

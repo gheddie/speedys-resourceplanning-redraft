@@ -2,6 +2,7 @@ package de.trispeedys.resourceplanning.interaction.errorhandler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import de.trispeedys.resourceplanning.context.ApplicationContext;
 import de.trispeedys.resourceplanning.util.html.HtmlGenerator;
 
 public abstract class AbstractRequestErrorHandler
@@ -19,7 +20,7 @@ public abstract class AbstractRequestErrorHandler
     {
         return new HtmlGenerator().withImage("tri", "jpg", 400, 115)
                 .withHeader("ERROR :")
-                .withParagraph(generateErrorMessage())
+                .withParagraph(ApplicationContext.getText(generateErrorMessage()))
                 .withClosingLink()
                 .render();
     }

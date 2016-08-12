@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
+import de.trispeedys.resourceplanning.context.BpmTimers;
 import de.trispeedys.resourceplanning.entity.Assignment;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -53,8 +54,9 @@ public class MailReminderSimpleWalkthroughProcessTest
         Helper helper = EntityCreator.createHelper("Schulz", "Oliver", 13, 2, 1976, "", null).saveOrUpdate();
 
         // get positions
-        Position pos1 = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S1", null);
-        Position pos2 = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S2", null);
+        Position posEinweisungStarter = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S1", null);
+        Position posAbsperrungZielkanal = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S2", null);
+        Position posKontrolleAbstieg = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S4", null);
         
         ResourcePlanningHelper.debugEvent(event);
         
@@ -63,22 +65,22 @@ public class MailReminderSimpleWalkthroughProcessTest
         instance = ProcessHelper.startMailReminderProcess(runtimeService, event, helper);
 
         // book a position
-        HelperInteraction.processHelperCallback(HelperCallback.ADD_POSITION, helper.getId(), event.getId(), pos1.getId(), processEngine.getProcessEngine());
+        HelperInteraction.processHelperCallback(HelperCallback.ADD_POSITION, helper.getId(), event.getId(), posEinweisungStarter.getId(), processEngine.getProcessEngine());
         ResourcePlanningHelper.debugEvent(event);
 
-        TestUtil.fireTimers(instance, processEngine.getProcessEngine());
+        TestUtil.fireTimer(instance, processEngine.getProcessEngine(), BpmTimers.TIMER_HELPER_REMINDER);
 
         // book another position
-        HelperInteraction.processHelperCallback(HelperCallback.ADD_POSITION, helper.getId(), event.getId(), pos2.getId(), processEngine.getProcessEngine());
+        HelperInteraction.processHelperCallback(HelperCallback.ADD_POSITION, helper.getId(), event.getId(), posKontrolleAbstieg.getId(), processEngine.getProcessEngine());
         // ResourcePlanningHelper.debugEvent(event);
         
         // there should be 2 active assignments for the helper in the event
         assertEquals(2, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(event, helper, null).size());
         
-        TestUtil.fireTimers(instance, processEngine.getProcessEngine());
+        TestUtil.fireTimer(instance, processEngine.getProcessEngine(), BpmTimers.TIMER_HELPER_REMINDER);
         
         // cancel position 1
-        HelperInteraction.processHelperCallback(HelperCallback.REMOVE_POSITION, helper.getId(), event.getId(), pos1.getId(), processEngine.getProcessEngine());
+        HelperInteraction.processHelperCallback(HelperCallback.REMOVE_POSITION, helper.getId(), event.getId(), posEinweisungStarter.getId(), processEngine.getProcessEngine());
         // ResourcePlanningHelper.debugEvent(event);
         
         // there should be 1 active assignments for the helper in the event

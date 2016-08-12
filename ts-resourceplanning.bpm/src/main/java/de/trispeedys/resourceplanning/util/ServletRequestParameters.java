@@ -12,5 +12,6 @@ public class ServletRequestParameters
     
     public static final String CONTEXT = "context";
     
+    // does the helper want to take over legacy positions?
     public static final String TAKEOVER_CALLBACK = "takeoverCallback";
 }

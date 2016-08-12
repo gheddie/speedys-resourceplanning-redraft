@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.ProcessEngine;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.context.BpmMessages;
 import de.trispeedys.resourceplanning.context.BpmVariables;
-import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.util.BpmKeyGenerator;
@@ -18,10 +17,12 @@ public class HelperInteraction
 {
     public synchronized static void processHelperCallback(HelperCallback helperCallback, Long helperId, Long eventId, Long positionId, ProcessEngine processEngine)
     {
+        /*
         if ((helperCallback != null) && (helperCallback.equals(HelperCallback.EARMARK_POSITION)))
         {
-            throw new ResourcePlanningException("");
+            throw new ResourcePlanningException("generic.failure.unimplemented");
         }
+        */
         
         processEngine = ensureProcessEngineSet(processEngine);
         
@@ -35,6 +36,9 @@ public class HelperInteraction
             case REMOVE_POSITION:
                 variables.put(BpmVariables.VAR_REMOVE_POS_ID, positionId);
                 break;
+            case EARMARK_POSITION:
+                variables.put(BpmVariables.VAR_EARMARK_POS_ID, positionId);
+                break;
             case NEVER_AGAIN:
                 // TODO send confirmation mail
                 RepositoryProvider.getRepository(HelperRepository.class).findById(helperId).deactivate();
@@ -43,16 +47,19 @@ public class HelperInteraction
                 // do nothing
                 break;
         }
+        
         variables.put(BpmVariables.VAR_HELPER_CALLBACK, helperCallback);
         String businessKey = BpmKeyGenerator.generateMailReminderBusinessKey(helperId, eventId);
         processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_HELPER_CALLBACK, businessKey, variables);
     }
     
-    public synchronized static void processLegacyPositionTakeover(Long helperId, Long eventId, ProcessEngine processEngine)
+    public synchronized static void processLegacyPositionTakeover(Long helperId, Long eventId, boolean doTakeOver, ProcessEngine processEngine)
     {
         processEngine = ensureProcessEngineSet(processEngine);
         String businessKey = BpmKeyGenerator.generateMailReminderBusinessKey(helperId, eventId);
-        processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_TAKEOVER_PRIOR_POS, businessKey, null);
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.VAR_DO_TAKEOVER_LEGACY_POS, doTakeOver);
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_TAKEOVER_PRIOR_POS, businessKey, variables);
     }
 
     private static ProcessEngine ensureProcessEngineSet(ProcessEngine processEngine)

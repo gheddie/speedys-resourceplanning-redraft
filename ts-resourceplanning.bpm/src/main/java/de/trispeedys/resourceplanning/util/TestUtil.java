@@ -3,6 +3,7 @@ package de.trispeedys.resourceplanning.util;
 import java.util.List;
 
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.impl.persistence.entity.TimerEntity;
 import org.camunda.bpm.engine.runtime.Job;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.hibernate.Session;
@@ -29,6 +30,7 @@ public class TestUtil
     public static void clearAll()
     {
         // Entities
+        clearTable("position_earmark");
         clearTable("message_queue_item");
         clearTable("assignment");
         clearTable("helper");
@@ -161,12 +163,23 @@ public class TestUtil
         return event;
     }
 
-    public static void fireTimers(ProcessInstance instance, ProcessEngine processEngine)
+    public static void fireTimer(ProcessInstance instance, ProcessEngine processEngine, String timerId)
     {
         List<Job> jobs = processEngine.getManagementService().createJobQuery().processInstanceId(instance.getId()).list();
+        if (jobs == null)
+        {
+            throw new IllegalArgumentException("no jobs found!!");
+        }
+        TimerEntity timer = null;
         for (Job job : jobs)
         {
-            processEngine.getManagementService().executeJob(job.getId());
+            timer = (TimerEntity) job;
+            if (timer.getJobHandlerConfiguration().equals(timerId))
+            {
+                processEngine.getManagementService().executeJob(job.getId()); 
+                return;
+            }
         }
+        throw new IllegalArgumentException("timer with id '"+timerId+"' not found!!");
     }
 }

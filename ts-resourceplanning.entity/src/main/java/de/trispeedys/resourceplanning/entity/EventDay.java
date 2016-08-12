@@ -23,7 +23,7 @@ import de.trispeedys.resourceplanning.util.DateHelperMethods;
 @Table(name = "event_day")
 public class EventDay extends AbstractDbObject
 {
-    private static final String VALIDATION_EVENT_DAYS_INCONSISTENT = "event days are inconsistent!!";
+    private static final String VALIDATION_EVENT_DAYS_INCONSISTENT = "validation.event.days.inconsistent";
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @Column(name = "planned_date")

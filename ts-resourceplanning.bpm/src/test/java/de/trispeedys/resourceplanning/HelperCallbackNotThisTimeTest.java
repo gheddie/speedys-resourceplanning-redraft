@@ -50,7 +50,7 @@ public class HelperCallbackNotThisTimeTest
         ProcessHelper.startMailReminderProcess(processEngine.getRuntimeService(), actualEvent, helper);
         
         // confirm legacy position take over
-        HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), processEngine.getProcessEngine());
+        HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), true, processEngine.getProcessEngine());
         
         // cancel for this time
         HelperInteraction.processHelperCallback(HelperCallback.NOT_THIS_TIME, helper.getId(), actualEvent.getId(), null, processEngine.getProcessEngine());

@@ -10,6 +10,7 @@ import de.trispeedys.resourceplanning.builder.EventPositionBuilder;
 import de.trispeedys.resourceplanning.builder.HelperBuilder;
 import de.trispeedys.resourceplanning.builder.MessageQueueItemBuilder;
 import de.trispeedys.resourceplanning.builder.PositionBuilder;
+import de.trispeedys.resourceplanning.builder.PositionEarmarkBuilder;
 import de.trispeedys.resourceplanning.entity.Assignment;
 import de.trispeedys.resourceplanning.entity.Domain;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -18,6 +19,7 @@ import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.MessageQueueItem;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.PositionEarmark;
 import de.trispeedys.resourceplanning.entity.enumeration.MessageQueueType;
 import de.trispeedys.resourceplanning.service.HelperService;
 
@@ -78,5 +80,10 @@ public class EntityCreator
     public static MessageQueueItem createMessageQueueItem(MessageQueueType aMessageQueueType, String aSubject, String aBody, String aToAddress, Helper aHelper)
     {
         return new MessageQueueItemBuilder().withMessageQueueType(aMessageQueueType).withSubject(aSubject).withBody(aBody).withToAddress(aToAddress).withHelper(aHelper).build();
+    }
+
+    public static PositionEarmark createPostionEarmark(Position position, Event event)
+    {
+        return new PositionEarmarkBuilder().build();
     }
 }
