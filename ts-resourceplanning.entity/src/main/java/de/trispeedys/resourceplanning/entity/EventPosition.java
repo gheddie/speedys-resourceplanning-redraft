@@ -1,5 +1,7 @@
 package de.trispeedys.resourceplanning.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -135,6 +137,19 @@ public class EventPosition extends AbstractDbObject implements ClonableEntity<Ev
                         : 59),
                 0);
         return new Interval(startTime, endTime);
+    }
+    
+    public boolean overlaps(List<Position> assignedPositions)
+    {
+        for (Position assignedPosition : assignedPositions)
+        {
+            EventPosition eventPosition = assignedPosition.getEventPosition(event);
+            if ((eventPosition != null) && (overlaps(eventPosition)))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean overlaps(EventPosition other)

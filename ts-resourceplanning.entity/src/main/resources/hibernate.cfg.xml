@@ -27,6 +27,7 @@
 		<mapping class="de.trispeedys.resourceplanning.entity.Position" />
 		<mapping class="de.trispeedys.resourceplanning.entity.Domain" />
 		<mapping class="de.trispeedys.resourceplanning.entity.Assignment" />
+		<mapping class="de.trispeedys.resourceplanning.entity.PositionEarmark" />
 		
 		<!-- messaging -->
 		<mapping class="de.trispeedys.resourceplanning.entity.MessageQueueItem" />

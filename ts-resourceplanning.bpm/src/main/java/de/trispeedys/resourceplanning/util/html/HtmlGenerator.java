@@ -34,6 +34,8 @@ public class HtmlGenerator
 
     public static final String MACHINE_MESSAGE = "machineMessage";
 
+    private static final String COLOR_ON_OVERLAPPING = "a3b4c5";
+
     private StringBuffer buffer;
 
     private boolean renderNoReply;
@@ -43,7 +45,8 @@ public class HtmlGenerator
         ASSIGNABLE,
         CANCELABLE,
         NONE,
-        COMPLETELY_BOOKED
+        COMPLETELY_BOOKED,
+        OVERLAPPING
     }
 
     public HtmlGenerator(boolean aRenderNoReply, boolean useCss)
@@ -281,9 +284,12 @@ public class HtmlGenerator
         for (EventDay eventDay : RepositoryProvider.getRepository(EventDayRepository.class).findByEvent(event, null))
         {
             firstRowOfEventDay = true;
-
+            boolean overlapWithAssgnedPositions = false;
             for (EventPosition eventPosition : RepositoryProvider.getRepository(EventPositionRepository.class).findByEventDay(eventDay, null))
             {
+                // TODO check if there is an overlap
+                overlapWithAssgnedPositions = eventPosition.overlaps(assignedPositions);
+
                 if (assignedPositionsSet.contains(eventPosition.getPosition().getId()))
                 {
                     // assigned
@@ -291,14 +297,26 @@ public class HtmlGenerator
                 }
                 else if (helperAssignablePositionsSet.contains(eventPosition.getPosition().getId()))
                 {
-                    // to be assigned (if not completely booked)
-                    if (eventPosition.isCompletelyBooked())
+                    /**
+                     * this is an assignable position. but if there is a collision with other bookings of the helper, he
+                     * can neither book it nor earmark it (as consequence of 'COMPLETELY_BOOKED').
+                     */
+                    if (!(overlapWithAssgnedPositions))
                     {
-                        rowOption = RowOption.COMPLETELY_BOOKED;
+                        // to be assigned (if not completely booked)
+                        if (eventPosition.isCompletelyBooked())
+                        {
+                            rowOption = RowOption.COMPLETELY_BOOKED;
+                        }
+                        else
+                        {
+                            rowOption = RowOption.ASSIGNABLE;
+                        }
                     }
                     else
                     {
-                        rowOption = RowOption.ASSIGNABLE;
+                        // the helper can do just nothing
+                        rowOption = RowOption.OVERLAPPING;
                     }
                 }
                 else
@@ -331,6 +349,11 @@ public class HtmlGenerator
         {
             switch (rowOption)
             {
+                case OVERLAPPING:
+                    colorStr = eventPosition.includesHourOfDay(hour)
+                            ? COLOR_ON_OVERLAPPING
+                            : COLOR_OFF;
+                    break;
                 case ASSIGNABLE:
                     colorStr = eventPosition.includesHourOfDay(hour)
                             ? COLOR_ON_UNASSIGNED
@@ -381,6 +404,7 @@ public class HtmlGenerator
                 linkText = ApplicationContext.getText("helpercallback.linkname.earmark");
                 break;
             case NONE:
+            case OVERLAPPING:
                 link = null;
                 break;
         }

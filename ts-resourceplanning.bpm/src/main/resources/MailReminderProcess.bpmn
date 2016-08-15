@@ -109,7 +109,9 @@
       <bpmn:incoming>SequenceFlow_0e3yjhp</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0e3yjhp" sourceRef="UserTask_1pbtvrs" targetRef="EndEvent_1720ja7" />
-    <bpmn:sequenceFlow id="SequenceFlow_1yvhjc6" name="manuell" sourceRef="ExclusiveGateway_1atp62m" targetRef="UserTask_1pbtvrs" />
+    <bpmn:sequenceFlow id="SequenceFlow_1yvhjc6" name="manuell" sourceRef="ExclusiveGateway_1atp62m" targetRef="UserTask_1pbtvrs">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${helperCallback=='MANUAL_ASSIGNMENT'}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_11o981g" sourceRef="ServiceTask_1vkzdc9" targetRef="ServiceTask_0w174g9" />
     <bpmn:serviceTask id="ServiceTask_1vkzdc9" name="Zuweisungen kündigen" camunda:class="de.trispeedys.resourceplanning.delegate.CancelAssignmentsDelegate">
       <bpmn:incoming>SequenceFlow_1sykkew</bpmn:incoming>
