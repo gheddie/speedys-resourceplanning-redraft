@@ -1,6 +1,8 @@
 package de.trispeedys.resourceplanning.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import de.gravitex.hibernateadapter.entity.AbstractDbObject;
@@ -9,8 +11,12 @@ import de.gravitex.hibernateadapter.entity.AbstractDbObject;
 @Table(name = "position_earmark")
 public class PositionEarmark extends AbstractDbObject
 {
+    @OneToOne
+    @JoinColumn(name = "position_id")
     private Position position;
     
+    @OneToOne
+    @JoinColumn(name = "event_id")
     private Event event;
     
     private boolean processed;

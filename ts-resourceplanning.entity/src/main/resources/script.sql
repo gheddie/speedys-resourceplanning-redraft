@@ -177,7 +177,7 @@ create table position_earmark
 	id bigint not null default nextval('position_earmark_id_seq'),
 	position_id bigint not null,
     event_id bigint not null,
-    processed bit,
+    processed boolean,
 	primary key (id)
 );
 
