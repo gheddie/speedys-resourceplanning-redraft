@@ -55,7 +55,6 @@ public class MailReminderSimpleWalkthroughProcessTest
 
         // get positions
         Position posEinweisungStarter = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S1", null);
-        Position posAbsperrungZielkanal = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S2", null);
         Position posKontrolleAbstieg = RepositoryProvider.getRepository(PositionRepository.class).findByKey("S4", null);
         
         ResourcePlanningHelper.debugEvent(event);

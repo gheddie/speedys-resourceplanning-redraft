@@ -82,8 +82,9 @@ public class EntityCreator
         return new MessageQueueItemBuilder().withMessageQueueType(aMessageQueueType).withSubject(aSubject).withBody(aBody).withToAddress(aToAddress).withHelper(aHelper).build();
     }
 
-    public static PositionEarmark createPostionEarmark(Position position, Event event)
+    public static PositionEarmark createPostionEarmark(Position position, Event event, Helper helper)
     {
-        return new PositionEarmarkBuilder().build();
+        return new PositionEarmarkBuilder().withPosition(position).withHelper(helper).withEvent(event).build();
+        
     }
 }

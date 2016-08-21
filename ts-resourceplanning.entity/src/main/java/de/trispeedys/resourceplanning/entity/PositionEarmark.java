@@ -19,6 +19,10 @@ public class PositionEarmark extends AbstractDbObject
     @JoinColumn(name = "event_id")
     private Event event;
     
+    @OneToOne
+    @JoinColumn(name = "helper_id")
+    private Helper helper;
+    
     private boolean processed;
 
     public Position getPosition()
@@ -39,6 +43,16 @@ public class PositionEarmark extends AbstractDbObject
     public void setEvent(Event event)
     {
         this.event = event;
+    }
+    
+    public Helper getHelper()
+    {
+        return helper;
+    }
+
+    public void setHelper(Helper helper)
+    {
+        this.helper = helper;
     }
 
     public boolean isProcessed()

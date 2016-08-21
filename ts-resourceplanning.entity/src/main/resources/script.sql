@@ -177,6 +177,7 @@ create table position_earmark
 	id bigint not null default nextval('position_earmark_id_seq'),
 	position_id bigint not null,
     event_id bigint not null,
+    helper_id bigint not null,
     processed boolean,
 	primary key (id)
 );
@@ -184,3 +185,4 @@ create table position_earmark
 -- fk
 alter table position_earmark add constraint fk_pos_earmark_position foreign key (position_id) references position (id);
 alter table position_earmark add constraint fk_pos_earmark_event foreign key (event_id) references event (id);
+alter table position_earmark add constraint fk_pos_earmark_helper foreign key (helper_id) references helper (id);

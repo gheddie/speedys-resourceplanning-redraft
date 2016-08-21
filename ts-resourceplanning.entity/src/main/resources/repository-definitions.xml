@@ -8,4 +8,5 @@
 	<repository-class>de.trispeedys.resourceplanning.repository.EventPositionRepository</repository-class>
 	<repository-class>de.trispeedys.resourceplanning.repository.AppConfigurationEntryRepository</repository-class>
 	<repository-class>de.trispeedys.resourceplanning.repository.MessageQueueItemRepository</repository-class>
+	<repository-class>de.trispeedys.resourceplanning.repository.PositionEarmarkRepository</repository-class>
 </repositories>

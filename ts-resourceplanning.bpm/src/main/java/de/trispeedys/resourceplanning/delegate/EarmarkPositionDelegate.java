@@ -13,6 +13,6 @@ public class EarmarkPositionDelegate extends AbstractResourcePlanningDelegate
     {
         EntityCreator.createPostionEarmark(
                 RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.VAR_EARMARK_POS_ID)),
-                getEvent(execution)).saveOrUpdate();
+                getEvent(execution), getHelper(execution)).saveOrUpdate();
     }
 }

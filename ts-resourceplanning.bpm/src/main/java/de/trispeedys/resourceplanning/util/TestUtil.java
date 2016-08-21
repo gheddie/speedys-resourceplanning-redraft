@@ -27,6 +27,12 @@ public class TestUtil
 
     public static final String TEST_POS_3 = "TEST_POS_3";
     
+    public static final String HELPER_CODE_H1 = "H1H113021990";
+    
+    public static final String HELPER_CODE_H2 = "H2H213021991";
+    
+    public static final String HELPER_CODE_H3 = "H3H313021992";
+    
     public static void clearAll()
     {
         // Entities
