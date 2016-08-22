@@ -21,8 +21,8 @@ public class LegacyPosRetrievalDelegate extends AbstractResourcePlanningDelegate
             {
                 legacyPosIdList.add(legacyPosition.getId());   
             }
-            execution.setVariable(BpmVariables.VAR_LEGACY_POS_ID_LIST, legacyPosIdList);
+            execution.setVariable(BpmVariables.MainProcess.VAR_LEGACY_POS_ID_LIST, legacyPosIdList);
         }
-        execution.setVariable(BpmVariables.VAR_LEGACY_POS_AVAILABLE, ((legacyPositions != null) && (legacyPositions.size() > 0)));
+        execution.setVariable(BpmVariables.MainProcess.VAR_LEGACY_POS_AVAILABLE, ((legacyPositions != null) && (legacyPositions.size() > 0)));
     }
 }

@@ -9,8 +9,8 @@ public class CheckConditionsDelegate extends AbstractResourcePlanningDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
-        assertVariableSet(BpmVariables.VAR_EVENT_ID, execution);
-        assertVariableSet(BpmVariables.VAR_HELPER_ID, execution);
+        assertVariableSet(BpmVariables.MainProcess.VAR_EVENT_ID, execution);
+        assertVariableSet(BpmVariables.MainProcess.VAR_HELPER_ID, execution);
         
         // set initial reminder type
         setReminderType(execution, ReminderType.INITIAL);

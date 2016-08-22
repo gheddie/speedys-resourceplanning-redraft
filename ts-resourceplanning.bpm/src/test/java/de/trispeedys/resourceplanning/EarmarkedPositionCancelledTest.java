@@ -75,5 +75,9 @@ public class EarmarkedPositionCancelledTest
         
         // there must be two earmarks...
         assertEquals(2, RepositoryProvider.getRepository(PositionEarmarkRepository.class).findAll().size());
+        
+        // 'H1' cancels 'Absperrung Herrenfeldtstrasse'
+        HelperInteraction.processHelperCallback(HelperCallback.REMOVE_POSITION, helperH1.getId(), actualEvent.getId(), positionAbsperrungHerrenfeldtstrasse.getId(),
+                processEngine.getProcessEngine());
     }
 }

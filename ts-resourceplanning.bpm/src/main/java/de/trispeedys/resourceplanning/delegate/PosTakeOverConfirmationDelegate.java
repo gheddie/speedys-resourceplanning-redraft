@@ -28,7 +28,7 @@ public class PosTakeOverConfirmationDelegate extends AbstractResourcePlanningDel
         HtmlGenerator generator = new HtmlGenerator(false, true).withHeader("Hallo, " + helper.formatName() + "!!");
         generator.withParagraph("Bei dem letzten Event hast Du auf den folgenden Positionen geholfen, die auch im aktuellen Event wieder vorhanden sind:");
         List<String> positionNames = new ArrayList<String>();
-        List<Long> legacyPosIdList = (List<Long>) execution.getVariable(BpmVariables.VAR_LEGACY_POS_ID_LIST);
+        List<Long> legacyPosIdList = (List<Long>) execution.getVariable(BpmVariables.MainProcess.VAR_LEGACY_POS_ID_LIST);
         Position legacyPosition = null;
         PositionRepository repository = RepositoryProvider.getRepository(PositionRepository.class);
         for (Long legacyPositionId : legacyPosIdList)

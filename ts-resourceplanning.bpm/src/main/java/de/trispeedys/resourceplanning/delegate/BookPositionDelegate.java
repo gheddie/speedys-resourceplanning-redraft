@@ -11,8 +11,8 @@ public class BookPositionDelegate extends AbstractResourcePlanningDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
-        assertVariableSet(BpmVariables.VAR_BOOK_POS_ID, execution);
+        assertVariableSet(BpmVariables.MainProcess.VAR_BOOK_POS_ID, execution);
         AssignmentService.bookHelper(getEvent(execution),
-                RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.VAR_BOOK_POS_ID)), getHelper(execution), null);
+                RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_BOOK_POS_ID)), getHelper(execution), null);
     }
 }

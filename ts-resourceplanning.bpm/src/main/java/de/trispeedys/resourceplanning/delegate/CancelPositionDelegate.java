@@ -7,13 +7,16 @@ import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.service.AssignmentService;
+import de.trispeedys.resourceplanning.util.ProcessHelper;
 
 public class CancelPositionDelegate extends AbstractResourcePlanningDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
-        assertVariableSet(BpmVariables.VAR_REMOVE_POS_ID, execution);
-        Position position = RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.VAR_REMOVE_POS_ID));
+        assertVariableSet(BpmVariables.MainProcess.VAR_REMOVE_POS_ID, execution);
+        Position position =
+                RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_REMOVE_POS_ID));
         AssignmentService.cancelHelper(getEvent(execution), position, getHelper(execution), null);
+        ProcessHelper.triggerEarmarks(execution.getProcessEngineServices().getRuntimeService(), position, getEvent(execution), null);
     }
 }

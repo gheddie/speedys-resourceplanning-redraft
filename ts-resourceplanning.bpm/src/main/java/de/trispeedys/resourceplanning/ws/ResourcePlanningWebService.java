@@ -53,8 +53,8 @@ public class ResourcePlanningWebService
 
         ProcessEngine processEngine = BpmPlatform.getDefaultProcessEngine();
         HashMap<String, Object> variables = new HashMap<String, Object>();
-        variables.put(BpmVariables.VAR_EVENT_ID, eventId);
-        variables.put(BpmVariables.VAR_HELPER_ID, helperId);
+        variables.put(BpmVariables.MainProcess.VAR_EVENT_ID, eventId);
+        variables.put(BpmVariables.MainProcess.VAR_HELPER_ID, helperId);
         String businessKey = BpmKeyGenerator.generateMailReminderBusinessKey(helperId, eventId);
         processEngine.getRuntimeService().startProcessInstanceByKey(PROCESS_KEY_MAIL_REMINDER, businessKey, variables);
     }

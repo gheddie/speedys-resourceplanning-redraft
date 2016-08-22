@@ -23,8 +23,8 @@ public class SendHelperMailDelegate extends AbstractResourcePlanningDelegate
     public void execute(DelegateExecution execution) throws Exception
     {
         logger.info(" --------- SendHelperMailDelegate ---------");
-        assertVariableSet(BpmVariables.VAR_REMINDER_TYPE, execution);
-        switch ((ReminderType) execution.getVariable(BpmVariables.VAR_REMINDER_TYPE))
+        assertVariableSet(BpmVariables.MainProcess.VAR_REMINDER_TYPE, execution);
+        switch ((ReminderType) execution.getVariable(BpmVariables.MainProcess.VAR_REMINDER_TYPE))
         {
             case INITIAL:
                 break;

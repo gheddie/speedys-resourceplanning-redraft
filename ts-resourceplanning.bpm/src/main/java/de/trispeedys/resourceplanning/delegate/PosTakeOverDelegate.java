@@ -14,7 +14,7 @@ public class PosTakeOverDelegate extends AbstractResourcePlanningDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {
-        List<Long> legacyPosIdList = (List<Long>) execution.getVariable(BpmVariables.VAR_LEGACY_POS_ID_LIST);
+        List<Long> legacyPosIdList = (List<Long>) execution.getVariable(BpmVariables.MainProcess.VAR_LEGACY_POS_ID_LIST);
         Position position = null;
         PositionRepository repository = RepositoryProvider.getRepository(PositionRepository.class);
         for (Long legacypositionId : legacyPosIdList)

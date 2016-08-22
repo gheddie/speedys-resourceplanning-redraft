@@ -31,13 +31,13 @@ public class HelperInteraction
         switch (helperCallback)
         {
             case ADD_POSITION:
-                variables.put(BpmVariables.VAR_BOOK_POS_ID, positionId);
+                variables.put(BpmVariables.MainProcess.VAR_BOOK_POS_ID, positionId);
                 break;
             case REMOVE_POSITION:
-                variables.put(BpmVariables.VAR_REMOVE_POS_ID, positionId);
+                variables.put(BpmVariables.MainProcess.VAR_REMOVE_POS_ID, positionId);
                 break;
             case EARMARK_POSITION:
-                variables.put(BpmVariables.VAR_EARMARK_POS_ID, positionId);
+                variables.put(BpmVariables.MainProcess.VAR_EARMARK_POS_ID, positionId);
                 break;
             case NEVER_AGAIN:
                 // TODO send confirmation mail
@@ -48,7 +48,7 @@ public class HelperInteraction
                 break;
         }
         
-        variables.put(BpmVariables.VAR_HELPER_CALLBACK, helperCallback);
+        variables.put(BpmVariables.MainProcess.VAR_HELPER_CALLBACK, helperCallback);
         String businessKey = BpmKeyGenerator.generateMailReminderBusinessKey(helperId, eventId);
         processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_HELPER_CALLBACK, businessKey, variables);
     }
@@ -58,7 +58,7 @@ public class HelperInteraction
         processEngine = ensureProcessEngineSet(processEngine);
         String businessKey = BpmKeyGenerator.generateMailReminderBusinessKey(helperId, eventId);
         Map<String, Object> variables = new HashMap<String, Object>();
-        variables.put(BpmVariables.VAR_DO_TAKEOVER_LEGACY_POS, doTakeOver);
+        variables.put(BpmVariables.MainProcess.VAR_DO_TAKEOVER_LEGACY_POS, doTakeOver);
         processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_TAKEOVER_PRIOR_POS, businessKey, variables);
     }
 

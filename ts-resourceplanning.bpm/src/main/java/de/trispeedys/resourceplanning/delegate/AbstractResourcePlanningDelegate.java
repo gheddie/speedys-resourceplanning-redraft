@@ -26,17 +26,17 @@ public abstract class AbstractResourcePlanningDelegate implements JavaDelegate
 
     protected Helper getHelper(DelegateExecution execution)
     {
-        return RepositoryProvider.getRepository(HelperRepository.class).findById((Long) execution.getVariable(BpmVariables.VAR_HELPER_ID));
+        return RepositoryProvider.getRepository(HelperRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_HELPER_ID));
     }
 
     protected Event getEvent(DelegateExecution execution)
     {
-        return RepositoryProvider.getRepository(EventRepository.class).findById((Long) execution.getVariable(BpmVariables.VAR_EVENT_ID));
+        return RepositoryProvider.getRepository(EventRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_EVENT_ID));
     }
     
     protected void setReminderType(DelegateExecution execution, ReminderType reminderType)
     {
-        execution.setVariable(BpmVariables.VAR_REMINDER_TYPE, reminderType);
+        execution.setVariable(BpmVariables.MainProcess.VAR_REMINDER_TYPE, reminderType);
     }
     
     protected String getBaseLink()

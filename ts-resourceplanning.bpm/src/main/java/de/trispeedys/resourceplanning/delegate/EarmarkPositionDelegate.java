@@ -12,7 +12,7 @@ public class EarmarkPositionDelegate extends AbstractResourcePlanningDelegate
     public void execute(DelegateExecution execution) throws Exception
     {
         EntityCreator.createPostionEarmark(
-                RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.VAR_EARMARK_POS_ID)),
+                RepositoryProvider.getRepository(PositionRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_EARMARK_POS_ID)),
                 getEvent(execution), getHelper(execution)).saveOrUpdate();
     }
 }
