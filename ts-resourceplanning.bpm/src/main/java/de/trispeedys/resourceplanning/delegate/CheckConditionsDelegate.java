@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.enumeration.ReminderType;
 
-public class CheckConditionsDelegate extends AbstractResourcePlanningDelegate
+public class CheckConditionsDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

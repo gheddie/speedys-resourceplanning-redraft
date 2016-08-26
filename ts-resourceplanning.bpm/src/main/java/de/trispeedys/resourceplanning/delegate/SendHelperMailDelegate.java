@@ -16,7 +16,7 @@ import de.trispeedys.resourceplanning.service.MessagingService;
 import de.trispeedys.resourceplanning.service.PositionService;
 import de.trispeedys.resourceplanning.util.html.HtmlGenerator;
 
-public class SendHelperMailDelegate extends AbstractResourcePlanningDelegate
+public class SendHelperMailDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     private static final Logger logger = Logger.getLogger(SendHelperMailDelegate.class);
     

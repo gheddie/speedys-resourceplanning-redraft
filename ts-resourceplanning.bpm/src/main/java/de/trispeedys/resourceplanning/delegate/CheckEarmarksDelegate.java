@@ -4,7 +4,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 import de.trispeedys.resourceplanning.context.BpmVariables;
 
-public class CheckEarmarksDelegate extends AbstractResourcePlanningDelegate
+public class CheckEarmarksDelegate extends AbstractResourcePlanningEarmarkProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

@@ -7,7 +7,7 @@ import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 
-public class BookPositionDelegate extends AbstractResourcePlanningDelegate
+public class BookPositionDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

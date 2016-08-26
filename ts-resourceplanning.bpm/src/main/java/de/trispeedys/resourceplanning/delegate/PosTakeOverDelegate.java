@@ -10,7 +10,7 @@ import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 
-public class PosTakeOverDelegate extends AbstractResourcePlanningDelegate
+public class PosTakeOverDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

@@ -9,7 +9,7 @@ import de.trispeedys.resourceplanning.repository.PositionRepository;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 import de.trispeedys.resourceplanning.util.ProcessHelper;
 
-public class CancelPositionDelegate extends AbstractResourcePlanningDelegate
+public class CancelPositionDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

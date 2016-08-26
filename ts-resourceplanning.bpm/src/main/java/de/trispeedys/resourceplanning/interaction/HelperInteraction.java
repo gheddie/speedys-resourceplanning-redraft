@@ -61,6 +61,21 @@ public class HelperInteraction
         variables.put(BpmVariables.MainProcess.VAR_DO_TAKEOVER_LEGACY_POS, doTakeOver);
         processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_TAKEOVER_PRIOR_POS, businessKey, variables);
     }
+    
+    public synchronized static void processEarmarkCallback(Long positionId, Long helperId, Long eventId, boolean acceptProposal, ProcessEngine processEngine)
+    {
+        String businessKey = BpmKeyGenerator.generateMailReminderEarmarkBusinessKey(helperId, eventId, positionId);
+        Map<String, Object> variables = new HashMap<String, Object>();
+        if (acceptProposal)
+        {
+            variables.put(BpmVariables.EarmarkProcess.VAR_EARMARK_ACCEPTED, true);
+        }
+        else
+        {
+            variables.put(BpmVariables.EarmarkProcess.VAR_EARMARK_ACCEPTED, false);
+        }
+        processEngine.getRuntimeService().correlateMessage(BpmMessages.MSG_EARMARK_CALLBACK, businessKey , variables);
+    }
 
     private static ProcessEngine ensureProcessEngineSet(ProcessEngine processEngine)
     {

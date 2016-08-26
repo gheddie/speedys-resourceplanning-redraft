@@ -26,13 +26,19 @@ public abstract class AbstractResourcePlanningDelegate implements JavaDelegate
 
     protected Helper getHelper(DelegateExecution execution)
     {
-        return RepositoryProvider.getRepository(HelperRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_HELPER_ID));
+        Long helperId = (Long) execution.getVariable(helperIdentifierVariable());
+        return RepositoryProvider.getRepository(HelperRepository.class).findById(helperId);
     }
+
+    protected abstract String helperIdentifierVariable();
 
     protected Event getEvent(DelegateExecution execution)
     {
-        return RepositoryProvider.getRepository(EventRepository.class).findById((Long) execution.getVariable(BpmVariables.MainProcess.VAR_EVENT_ID));
+        Long eventId = (Long) execution.getVariable(eventIdentifierVariable());
+        return RepositoryProvider.getRepository(EventRepository.class).findById(eventId);
     }
+
+    protected abstract String eventIdentifierVariable();
     
     protected void setReminderType(DelegateExecution execution, ReminderType reminderType)
     {

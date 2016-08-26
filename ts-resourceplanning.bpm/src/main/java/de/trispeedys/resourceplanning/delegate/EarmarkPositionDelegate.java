@@ -7,7 +7,7 @@ import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
 
-public class EarmarkPositionDelegate extends AbstractResourcePlanningDelegate
+public class EarmarkPositionDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

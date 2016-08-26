@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.gravitex.hibernateadapter.core.exception.HibernateAdapterException;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -34,7 +35,7 @@ public class EarmarkedPositionCancelledTest
     @Rule
     public ProcessEngineRule processEngine = new ProcessEngineRule();
 
-    @Test
+    @Test (expected = HibernateAdapterException.class)
     @Deployment(resources = "MailReminderProcess.bpmn")
     public void testEarmarkedPositionCancelled()
     {
@@ -67,7 +68,7 @@ public class EarmarkedPositionCancelledTest
         HelperInteraction.processHelperCallback(HelperCallback.ADD_POSITION, helperH1.getId(), actualEvent.getId(), positionAbsperrungHerrenfeldtstrasse.getId(),
                 processEngine.getProcessEngine());
         
-        // both oper helpers choose to earmark that position...
+        // both oper helpers (H2+H3) choose to earmark that position...
         HelperInteraction.processHelperCallback(HelperCallback.EARMARK_POSITION, helperH2.getId(), actualEvent.getId(), positionAbsperrungHerrenfeldtstrasse.getId(),
                 processEngine.getProcessEngine());
         HelperInteraction.processHelperCallback(HelperCallback.EARMARK_POSITION, helperH3.getId(), actualEvent.getId(), positionAbsperrungHerrenfeldtstrasse.getId(),
@@ -79,5 +80,12 @@ public class EarmarkedPositionCancelledTest
         // 'H1' cancels 'Absperrung Herrenfeldtstrasse'
         HelperInteraction.processHelperCallback(HelperCallback.REMOVE_POSITION, helperH1.getId(), actualEvent.getId(), positionAbsperrungHerrenfeldtstrasse.getId(),
                 processEngine.getProcessEngine());
+        
+        // there should be two process instances of 'MailReminderEarkmarkProcess'
+        assertEquals(2, processEngine.getRuntimeService().createProcessInstanceQuery().processDefinitionKey(ProcessHelper.MAIL_REMINDER_EARMARK_PROCESS_KEY).list().size());
+        
+        // both helper 'H2' accept the proposal for booking position 'Absperrung Herrenfeldtstrasse' --> must give an exception
+        HelperInteraction.processEarmarkCallback(positionAbsperrungHerrenfeldtstrasse.getId(), helperH2.getId(), actualEvent.getId(), true, processEngine.getProcessEngine());
+        HelperInteraction.processEarmarkCallback(positionAbsperrungHerrenfeldtstrasse.getId(), helperH3.getId(), actualEvent.getId(), true, processEngine.getProcessEngine());
     }
 }

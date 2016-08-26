@@ -20,7 +20,7 @@ import de.trispeedys.resourceplanning.util.ServletRequestParameters;
 import de.trispeedys.resourceplanning.util.html.HtmlGenerator;
 import de.trispeedys.resourceplanning.util.html.LinkGenerator;
 
-public class PosTakeOverConfirmationDelegate extends AbstractResourcePlanningDelegate
+public class PosTakeOverConfirmationDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

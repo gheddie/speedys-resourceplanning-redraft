@@ -1,6 +1,7 @@
 package de.trispeedys.resourceplanning.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.RuntimeService;
@@ -8,7 +9,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 
 import de.gravitex.hibernateadapter.core.SessionToken;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
-import de.trispeedys.resourceplanning.context.BpmSignals;
+import de.trispeedys.resourceplanning.context.BpmMessages;
 import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
@@ -21,15 +22,18 @@ import de.trispeedys.resourceplanning.repository.PositionEarmarkRepository;
 public class ProcessHelper
 {
     public static final String MAIL_REMINDER_PROCESS_KEY = "MailReminderProcess";
-    
+
+    public static final String MAIL_REMINDER_EARMARK_PROCESS_KEY = "MailReminderEarkmarkProcess";
+
     public static ProcessInstance startMailReminderProcess(RuntimeService runtimeService, Event event, Helper helper)
     {
         HashMap<String, Object> variables = new HashMap<String, Object>();
         variables.put(BpmVariables.MainProcess.VAR_EVENT_ID, event.getId());
         variables.put(BpmVariables.MainProcess.VAR_HELPER_ID, helper.getId());
-        return runtimeService.startProcessInstanceByKey(MAIL_REMINDER_PROCESS_KEY, BpmKeyGenerator.generateMailReminderBusinessKey(helper, event), variables);
+        return runtimeService.startProcessInstanceByKey(MAIL_REMINDER_PROCESS_KEY, BpmKeyGenerator.generateMailReminderBusinessKey(helper, event),
+                variables);
     }
-    
+
     public static void startEventPlanning(Long eventId)
     {
         // TODO make sure the event exists and stuff like that
@@ -47,8 +51,12 @@ public class ProcessHelper
         for (PositionEarmark earmark : RepositoryProvider.getRepository(PositionEarmarkRepository.class).findUnprocessedByPositionAndEvent(position, event,
                 sessionToken))
         {
-            // post signal
-            runtimeService.signalEventReceived(BpmSignals.SIG_POS_CANCELLED);
+            String businessKey = BpmKeyGenerator.generateMailReminderEarmarkBusinessKey(earmark.getHelper(), event, position);
+            Map<String, Object> variables = new HashMap<String, Object>();
+            variables.put(BpmVariables.EarmarkProcess.VAR_EARMARK_POSITION_ID, position.getId());
+            variables.put(BpmVariables.EarmarkProcess.VAR_EARMARK_EVENT_ID, event.getId());
+            variables.put(BpmVariables.EarmarkProcess.VAR_EARMARK_HELPER_ID, earmark.getHelper().getId());
+            runtimeService.startProcessInstanceByMessage(BpmMessages.MSG_START_EARMARK_PROCESS, businessKey, variables );
         }
     }
 }

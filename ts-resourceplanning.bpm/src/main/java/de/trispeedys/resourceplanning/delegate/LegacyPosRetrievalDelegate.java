@@ -9,7 +9,7 @@ import de.trispeedys.resourceplanning.context.BpmVariables;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.service.AssignmentService;
 
-public class LegacyPosRetrievalDelegate extends AbstractResourcePlanningDelegate
+public class LegacyPosRetrievalDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

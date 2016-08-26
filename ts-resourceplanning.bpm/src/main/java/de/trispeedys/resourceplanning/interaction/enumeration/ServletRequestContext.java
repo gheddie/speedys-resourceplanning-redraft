@@ -4,5 +4,7 @@ public enum ServletRequestContext
 {
     LEGACY_POS,
     
-    CALLBACK
+    CALLBACK,
+    
+    EARMARK
 }

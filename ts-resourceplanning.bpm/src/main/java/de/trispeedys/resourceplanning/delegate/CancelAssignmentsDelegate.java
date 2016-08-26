@@ -6,7 +6,7 @@ import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.entity.Assignment;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
 
-public class CancelAssignmentsDelegate extends AbstractResourcePlanningDelegate
+public class CancelAssignmentsDelegate extends AbstractResourcePlanningMasterProcessDelegate
 {
     public void execute(DelegateExecution execution) throws Exception
     {

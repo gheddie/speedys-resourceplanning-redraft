@@ -33,5 +33,14 @@ public class BpmVariables
     public class EarmarkProcess
     {
         public static final String VAR_EARMARK_FOUND = "earmarkFound";
+        
+        public static final String VAR_EARMARK_ACCEPTED = "earmarkAccepted";
+        
+        // the position (id) this earmark recovery process is about
+        public static final String VAR_EARMARK_POSITION_ID = "earmarkPositionId";
+
+        public static final String VAR_EARMARK_EVENT_ID = "earmarkEventId";
+        
+        public static final String VAR_EARMARK_HELPER_ID = "earmarkHelperId";
     }
 }
