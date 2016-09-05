@@ -12,5 +12,7 @@ public enum HelperCallback
     
     EARMARK_POSITION,
     
-    MANUAL_ASSIGNMENT 
+    MANUAL_ASSIGNMENT,
+    
+    FINISH
 }

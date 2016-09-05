@@ -8,7 +8,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 
 import de.gravitex.hibernateadapter.core.SessionToken;
 import de.gravitex.hibernateadapter.core.annotation.DbOperationType;

@@ -2,11 +2,6 @@ package de.trispeedys.resourceplanning.messaging;
 
 import org.junit.Test;
 
-import de.gravitex.hibernateadapter.core.SessionHolder;
-import de.gravitex.hibernateadapter.core.SessionManager;
-import de.trispeedys.resourceplanning.entity.MessageQueueItem;
-import de.trispeedys.resourceplanning.entity.enumeration.MessageQueueType;
-import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.util.TestUtil;
 
 public class MessagingTest

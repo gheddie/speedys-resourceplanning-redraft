@@ -20,7 +20,7 @@ import de.trispeedys.resourceplanning.util.StringUtilMethods;
 @Entity
 public class Helper extends AbstractDbObject
 {
-    private static final String VALIDATION_CODE_NOT_UNIQUE = "helper code is not unique!!";
+    // private static final String VALIDATION_CODE_NOT_UNIQUE = "helper code is not unique!!";
     
     @Column(name = "last_name")
     private String lastName;

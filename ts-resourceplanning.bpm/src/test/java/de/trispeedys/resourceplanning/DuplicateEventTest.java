@@ -1,10 +1,11 @@
 package de.trispeedys.resourceplanning;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.junit.Test;
 
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.entity.Event;
@@ -17,8 +18,6 @@ import de.trispeedys.resourceplanning.service.EventService;
 import de.trispeedys.resourceplanning.util.ResourcePlanningHelper;
 import de.trispeedys.resourceplanning.util.TestUtil;
 import de.trispeedys.resourceplanning.util.XmlEventParser;
-
-import static org.junit.Assert.assertEquals;
 
 public class DuplicateEventTest
 {

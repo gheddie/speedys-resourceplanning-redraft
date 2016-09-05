@@ -10,13 +10,11 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
-import de.trispeedys.resourceplanning.entity.PositionEarmark;
 import de.trispeedys.resourceplanning.entity.enumeration.AssignmentState;
 import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
 import de.trispeedys.resourceplanning.repository.EventPositionRepository;
-import de.trispeedys.resourceplanning.repository.PositionEarmarkRepository;
 
 public class AssignmentService
 {

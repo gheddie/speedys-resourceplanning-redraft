@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Event description="some event">
+	<EventDays>
+		<EventDay index="0" plannedDate="17.06.2017" />
+		<EventDay index="1" plannedDate="18.06.2017" />
+	</EventDays>
+	<Domains>
+		<Domain name="Schwimmstrecke">
+			<Positions>
+				<Position name="Einweisung Starter" minimalAge="12"
+					requiredHelperCount="5" day="0" starthour="13" endhour="15" key="S1">
+					<HelperAllocations />
+				</Position>
+				<Position name="Wechselzone" minimalAge="16"
+					requiredHelperCount="3" day="1" starthour="9" endhour="13" key="S11">
+					<HelperAllocations />
+				</Position>
+				<Position name="Bandkontrolle Zielkanal" minimalAge="16"
+					requiredHelperCount="3" day="1" starthour="12" endhour="14" key="S12" />
+			</Positions>
+		</Domain>
+		<Domain name="Radstrecke">
+			<Positions>
+				<Position name="Absperrung Zielkanal" minimalAge="12"
+					requiredHelperCount="5" day="0" starthour="13" endhour="15" key="S2" />
+				<Position name="Übergang Laufen" minimalAge="12"
+					requiredHelperCount="2" day="0" starthour="16" endhour="19" key="S3" />
+				<Position name="Kontrolle Abstieg" minimalAge="12"
+					requiredHelperCount="4" day="0" starthour="9" endhour="11" key="S4">
+					<HelperAllocations>
+						<HelperAllocation allocatorReference="H1" />
+						<HelperAllocation allocatorReference="H2" />
+					</HelperAllocations>
+				</Position>
+			</Positions>
+		</Domain>
+		<Domain name="Laufstrecke">
+			<Positions>
+				<Position name="Absperrung Herrenfeldtstrasse" minimalAge="16"
+					requiredHelperCount="1" day="1" starthour="12" endhour="14" key="S5">
+					<HelperAllocations />
+				</Position>
+				<Position name="Laufverpflegung" minimalAge="16"
+					requiredHelperCount="2" day="1" starthour="12" endhour="14" key="S6">
+					<HelperAllocations>
+						<HelperAllocation allocatorReference="H1" />
+						<HelperAllocation allocatorReference="H3" />
+					</HelperAllocations>
+				</Position>
+			</Positions>
+		</Domain>
+	</Domains>
+	<Helpers>
+		<Helper lastname="Abend" firstname="Michael" dateofbirth="01.01.1964"
+			email="abend@tri-speedys.de" allocator="H1" />
+		<Helper lastname="Schulz" firstname="Stefan" dateofbirth="13.02.1991"
+			email="stefan.schulz.1976@googlemail.com" allocator="H2" />
+		<Helper lastname="Schulz" firstname="Tim" dateofbirth="11.11.2005"
+			email="stefan.schulz.1976@googlemail.com" allocator="H3" />
+	</Helpers>
+</Event>

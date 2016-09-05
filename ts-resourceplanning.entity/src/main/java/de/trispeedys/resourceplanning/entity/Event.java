@@ -6,7 +6,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 
 import de.gravitex.hibernateadapter.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.enumeration.EventState;

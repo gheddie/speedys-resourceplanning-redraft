@@ -1,7 +1,5 @@
 package de.trispeedys.resourceplanning.builder;
 
-import org.joda.time.DateTime;
-
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventDay;
 import de.trispeedys.resourceplanning.entity.EventPosition;

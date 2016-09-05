@@ -17,13 +17,6 @@ public class HelperInteraction
 {
     public synchronized static void processHelperCallback(HelperCallback helperCallback, Long helperId, Long eventId, Long positionId, ProcessEngine processEngine)
     {
-        /*
-        if ((helperCallback != null) && (helperCallback.equals(HelperCallback.EARMARK_POSITION)))
-        {
-            throw new ResourcePlanningException("generic.failure.unimplemented");
-        }
-        */
-        
         processEngine = ensureProcessEngineSet(processEngine);
         
         // correlate the message

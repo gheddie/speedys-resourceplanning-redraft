@@ -35,6 +35,8 @@ import de.trispeedys.resourceplanning.util.XmlEventParser;
 /**
  * http://localhost:8080/ts-resourceplanning.bpm-0.0.1-SNAPSHOT/ResourcePlanningService?wsdl
  * 
+ * http://www.triathlon-helfer.de:8080/ts-resourceplanning.bpm-0.0.1-SNAPSHOT/ResourcePlanningService?wsdl
+ * 
  * http://www.jlion.com/docs/gantt.aspx
  * 
  * @author z000msmf

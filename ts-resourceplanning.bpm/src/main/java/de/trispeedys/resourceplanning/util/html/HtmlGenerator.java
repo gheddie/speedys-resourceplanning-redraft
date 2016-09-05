@@ -384,8 +384,6 @@ public class HtmlGenerator
         parameters.put(ServletRequestParameters.CONTEXT, ServletRequestContext.CALLBACK);
         String link = null;
         String linkText = "";
-        String domainName = eventPosition.getPosition().getName();
-        String positionName = eventPosition.getPosition().getDomain().getName();
         switch (rowOption)
         {
             case ASSIGNABLE:
