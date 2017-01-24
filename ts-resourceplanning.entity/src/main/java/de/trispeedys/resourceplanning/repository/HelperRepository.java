@@ -16,6 +16,12 @@ public class HelperRepository extends AbstractDatabaseRepository<Helper> impleme
     
     private static final String PARAM_HELPER_STATE = "helperState";
     
+    private static final String PARAM_SUPERVISOR = "supervisor";
+    
+    public static final String PARAM_DATE_OF_BIRTH = "dateOfBirth";
+    
+    public static final String PARAM_EMAIL = "email";
+    
     protected DefaultDatasource<Helper> createDataSource()
     {
         return new HelperDatasource();
@@ -29,5 +35,11 @@ public class HelperRepository extends AbstractDatabaseRepository<Helper> impleme
     public List<Helper> findActiveHelpers(SessionToken sessionToken)
     {
         return dataSource().find(sessionToken, PARAM_HELPER_STATE, HelperState.ACTIVE);
+    }
+
+    public List<Helper> findSubordinatedHelpers(Long helperId, SessionToken sessionToken)
+    {
+        Helper supervisor = findById(helperId);
+        return dataSource().find(sessionToken, PARAM_SUPERVISOR, supervisor);
     }
 }

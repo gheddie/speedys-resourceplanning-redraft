@@ -16,6 +16,7 @@ import org.junit.Test;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.enumeration.AssignmentState;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
 import de.trispeedys.resourceplanning.repository.HelperRepository;
@@ -63,7 +64,7 @@ public class LegacyPositionTest
         HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), false, processEngine.getProcessEngine());
         
         // there must be no assignments for the given helper in the given event
-        assertEquals(0, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(actualEvent, helper, null).size());
+        assertEquals(0, RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(actualEvent, helper, null, AssignmentState.ACTIVE).size());
     }
 
     @Test
@@ -98,6 +99,6 @@ public class LegacyPositionTest
         HelperInteraction.processLegacyPositionTakeover(helper.getId(), actualEvent.getId(), true, processEngine.getProcessEngine());
         
         // now, the is on helper assignment in the actual event ('S4')...
-        assertEquals(1, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(actualEvent, helper, null).size());
+        assertEquals(1, RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(actualEvent, helper, null, AssignmentState.ACTIVE).size());
     }
 }

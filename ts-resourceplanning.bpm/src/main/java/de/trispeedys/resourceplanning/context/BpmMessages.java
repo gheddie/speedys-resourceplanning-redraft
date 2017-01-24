@@ -9,4 +9,7 @@ public class BpmMessages
     public static final String MSG_EARMARK_CALLBACK = "MSG_EARMARK_CALLBACK";
     
     public static final String MSG_START_EARMARK_PROCESS = "MSG_START_EARMARK_PROCESS";
+    
+    // message sent to a request process in order to finalize it...
+    public static final String MSG_FINALIZE_REQUEST_PROCESS = "MSG_FINALIZE_REQUEST_PROCESS";
 }

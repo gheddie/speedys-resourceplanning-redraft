@@ -24,6 +24,8 @@ public class ProcessHelper
     public static final String MAIL_REMINDER_PROCESS_KEY = "MailReminderProcess";
 
     public static final String MAIL_REMINDER_EARMARK_PROCESS_KEY = "MailReminderEarkmarkProcess";
+    
+    public static final String SWAP_POSITIONS_PROCESS_KEY = "RequestHelpSwapProcess";
 
     public static ProcessInstance startMailReminderProcess(RuntimeService runtimeService, Event event, Helper helper)
     {
@@ -31,6 +33,15 @@ public class ProcessHelper
         variables.put(BpmVariables.MainProcess.VAR_EVENT_ID, event.getId());
         variables.put(BpmVariables.MainProcess.VAR_HELPER_ID, helper.getId());
         return runtimeService.startProcessInstanceByKey(MAIL_REMINDER_PROCESS_KEY, BpmKeyGenerator.generateMailReminderBusinessKey(helper, event),
+                variables);
+    }
+    
+    public static ProcessInstance startSwapProcess(RuntimeService runtimeService, Event event, Helper helper, boolean swapBySystem, boolean toNullSwap)
+    {
+        HashMap<String, Object> variables = new HashMap<String, Object>();
+        variables.put(BpmVariables.SwapPositionsProcess.VAR_SWAP_BY_System, swapBySystem);
+        variables.put(BpmVariables.SwapPositionsProcess.VAR_TO_NULL_SWAP, toNullSwap);
+        return runtimeService.startProcessInstanceByKey(SWAP_POSITIONS_PROCESS_KEY, BpmKeyGenerator.generateSwapPositionsBusinessKey(helper, event),
                 variables);
     }
 
@@ -58,5 +69,12 @@ public class ProcessHelper
             variables.put(BpmVariables.EarmarkProcess.VAR_EARMARK_HELPER_ID, earmark.getHelper().getId());
             runtimeService.startProcessInstanceByMessage(BpmMessages.MSG_START_EARMARK_PROCESS, businessKey, variables );
         }
+    }
+
+    public static void finalizeRequestProcess(RuntimeService runtimeService, Helper helper, Event event)
+    {
+        // correlate finalization message to matching process instance...
+        String businessKey = BpmKeyGenerator.generateMailReminderBusinessKey(helper.getId(), event.getId());
+        runtimeService.correlateMessage(BpmMessages.MSG_FINALIZE_REQUEST_PROCESS, businessKey, null);
     }
 }

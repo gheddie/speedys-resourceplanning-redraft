@@ -32,9 +32,9 @@ public class AssignmentRepository extends AbstractDatabaseRepository<Assignment>
         return dataSource().find(sessionToken, PARAM_EVENT_POSITION, eventPosition, PARAM_ASSIGNMENT_STATE, AssignmentState.ACTIVE);
     }
 
-    public List<Assignment> findActiveByEventAndHelper(Event event, Helper helper, SessionToken sessionToken)
+    public List<Assignment> findByEventAndHelperAndState(Event event, Helper helper, SessionToken sessionToken, AssignmentState assignmentState)
     {
-        List<Assignment> assignments = dataSource().find(sessionToken, PARAM_HELPER, helper, PARAM_ASSIGNMENT_STATE, AssignmentState.ACTIVE);
+        List<Assignment> assignments = dataSource().find(sessionToken, PARAM_HELPER, helper, PARAM_ASSIGNMENT_STATE, assignmentState);
         List<Assignment> result = new ArrayList<Assignment>();
         for (Assignment assignment : assignments)
         {

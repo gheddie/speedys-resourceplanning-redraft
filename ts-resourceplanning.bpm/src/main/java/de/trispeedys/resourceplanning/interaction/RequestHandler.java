@@ -1,21 +1,30 @@
 package de.trispeedys.resourceplanning.interaction;
 
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.camunda.bpm.engine.ProcessEngine;
 
 import de.trispeedys.resourceplanning.interaction.errorhandler.DefaultRequestErrorHandler;
+import de.trispeedys.resourceplanning.parser.ValueParser;
+import de.trispeedys.resourceplanning.repository.HelperRepository;
 import de.trispeedys.resourceplanning.repository.PositionRepository;
+import de.gravitex.hibernateadapter.core.SessionHolder;
+import de.gravitex.hibernateadapter.core.SessionManager;
+import de.gravitex.hibernateadapter.core.SessionToken;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.context.ApplicationContext;
+import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
 import de.trispeedys.resourceplanning.interaction.enumeration.ServletRequestContext;
 import de.trispeedys.resourceplanning.interaction.errorhandler.AbstractRequestErrorHandler;
 import de.trispeedys.resourceplanning.util.ServletRequestParameters;
 import de.trispeedys.resourceplanning.util.StringUtilMethods;
+import de.trispeedys.resourceplanning.util.TestUtil;
 import de.trispeedys.resourceplanning.util.html.HtmlGenerator;
 
 public class RequestHandler
@@ -23,6 +32,8 @@ public class RequestHandler
     public static final String GENERIC_REQUEST_RECEIVER = "GenericRequestReceiver.jsp";
 
     public static final String GENERIC_CONFIRM_RECEIVER = "GenericConfirmReceiver.jsp";
+    
+    public static final String HELPER_UPDATE_RECEIVER = "UpdateHelperDataReceiver.jsp";
 
     private static HashMap<Class<? extends Exception>, AbstractRequestErrorHandler> errorHandlers =
             new HashMap<Class<? extends Exception>, AbstractRequestErrorHandler>();
@@ -170,10 +181,84 @@ public class RequestHandler
                 return null;
         }
     }
+    
+    /**
+     * http://localhost:8080/ts-resourceplanning.bpm-0.0.1-SNAPSHOT/UpdateHelperData.jsp?helperId=9737
+     * 
+     * @param request
+     * @param processEngine
+     * @return
+     */
+    public static String renderHelperUpdateForm(HttpServletRequest request, ProcessEngine processEngine)
+    {
+        Long helperId = parseLong(request.getParameter(ServletRequestParameters.HELPER_ID));
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<form action=\"UpdateHelperDataReceiver.jsp\">");
+        buffer.append("<table border=\"1\">");
+        int i = 0;
+        String helperBirthAttribute = null;
+        String helperMailAttribute = null;
+        for (Helper subordinated : RepositoryProvider.getRepository(HelperRepository.class).findSubordinatedHelpers(helperId, null))
+        {
+            // build parameter names
+            helperBirthAttribute = RequestHelper.buildParameterName(subordinated, HelperRepository.PARAM_DATE_OF_BIRTH);
+            helperMailAttribute = RequestHelper.buildParameterName(subordinated, HelperRepository.PARAM_EMAIL);
+            
+            // add an input for email and birthday
+            buffer.append("<tr>");
+            buffer.append("<td>"+subordinated.formatName()+"</td><td><input type=\"text\" name=\""+helperBirthAttribute+"\" value=\""+ValueParser.formatValue(subordinated.getDateOfBirth())+"\"></td><td><input type=\"text\" name=\""+helperMailAttribute+"\" value=\""+subordinated.getEmail()+"\"></td>");
+            buffer.append("</tr>");
+            i++;
+        }  
+        buffer.append("</table>");
+        buffer.append("<input type=\"submit\" value=\"OK\">");
+        buffer.append("</form>");
+        return buffer.toString();
+    }
+    
+    public static String processUpdateResult(HttpServletRequest request, ProcessEngine processEngine)
+    {
+        SessionHolder sessionHolder = SessionManager.getInstance().registerSession(RequestHandler.class, null);
+        SessionToken sessionToken = sessionHolder.getToken();
+        try
+        {
+            sessionHolder.beginTransaction();
+            HashMap<Long, Helper> helpers = new HashMap<>();
+            Long helperId = null;
+            HelperRepository helperRepository = RepositoryProvider.getRepository(HelperRepository.class);
+            for (String key : request.getParameterMap().keySet())
+            {
+                // get values
+                String[] spl = key.split("@");
+                helperId = ValueParser.parseValue(spl[1], Long.class);
+                // cache helper
+                Helper helper = helpers.get(helperId);
+                if (helper == null)
+                {
+                    helpers.put(helperId, helperRepository.findById(helperId));
+                }
+                helper = helpers.get(helperId);
+                RequestHelper.applyValueChange(helper, spl[2], request.getParameterMap().get(key)[0]);
+                helper.saveOrUpdate(sessionToken);
+            }
+            sessionHolder.commitTransaction();
+            return "OK";
+        }
+        catch (Exception e)
+        {
+            sessionHolder.rollbackTransaction();
+            e.printStackTrace();
+            return "FAULT : " + e.getMessage();
+        }
+        finally
+        {
+            SessionManager.getInstance().unregisterSession(sessionHolder);
+        }
+    }
 
     private static boolean parseBoolean(String value)
     {
-        // TODO
+        // TODO switch to value parser?
         if (StringUtilMethods.isBlank(value))
         {
             return false;
@@ -183,7 +268,7 @@ public class RequestHandler
 
     private static Long parseLong(String value)
     {
-        // TODO do we need this?
+        // TODO switch to value parser?
         if (StringUtilMethods.isBlank(value))
         {
             return null;

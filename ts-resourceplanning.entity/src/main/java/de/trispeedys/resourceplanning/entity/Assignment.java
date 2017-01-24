@@ -15,8 +15,10 @@ import de.gravitex.hibernateadapter.core.annotation.EntitySaveListener;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.gravitex.hibernateadapter.entity.AbstractDbObject;
 import de.trispeedys.resourceplanning.entity.enumeration.AssignmentState;
+import de.trispeedys.resourceplanning.exception.ResourcePlanningException;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
+import de.trispeedys.resourceplanning.util.DbResultExcluder;
 
 @Entity
 public class Assignment extends AbstractDbObject implements ClonableEntity<Assignment>
@@ -103,7 +105,7 @@ public class Assignment extends AbstractDbObject implements ClonableEntity<Assig
         }
         
         // get all active assignments
-        List<Assignment> activeAssignments = RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(getEvent(), getHelper(), null);
+        List<Assignment> activeAssignments = new DbResultExcluder(RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(getEvent(), getHelper(), null, AssignmentState.ACTIVE), this).getResult();
         
         // check overlap with 'this'
         for (Assignment activeAssignment : activeAssignments)
@@ -134,6 +136,16 @@ public class Assignment extends AbstractDbObject implements ClonableEntity<Assig
     public void cancel(SessionToken sessionToken)
     {
         assignmentState = AssignmentState.CANCELLED;
+        RepositoryProvider.getRepository(AssignmentRepository.class).saveOrUpdate(sessionToken, this);
+    }
+    
+    public void finalize(SessionToken sessionToken)
+    {
+        if (assignmentState.equals(AssignmentState.CANCELLED))
+        {
+            throw new ResourcePlanningException("can not finalize a cancelled assignment!!");
+        }
+        assignmentState = AssignmentState.FINALIZED;
         RepositoryProvider.getRepository(AssignmentRepository.class).saveOrUpdate(sessionToken, this);
     }
 

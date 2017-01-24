@@ -89,7 +89,7 @@ public class AssignmentService
         List<Position> result = new ArrayList<Position>();
         Position position = null;
         for (Assignment activeAssignmentFromParentEvent : RepositoryProvider.getRepository(AssignmentRepository.class)
-                .findActiveByEventAndHelper(event.getParentEvent(), helper, sessionToken))
+                .findByEventAndHelperAndState(event.getParentEvent(), helper, sessionToken, AssignmentState.ACTIVE))
         {
             position = activeAssignmentFromParentEvent.getEventPosition().getPosition();
             if (actualPositionIds.contains(position.getId()))

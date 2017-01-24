@@ -10,6 +10,7 @@ import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.EventPosition;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.enumeration.AssignmentState;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
 import de.trispeedys.resourceplanning.repository.EventPositionRepository;
 
@@ -25,7 +26,7 @@ public class PositionService
     public static List<Position> getAssignedPositions(Event event, Helper helper, SessionToken sessionToken)
     {
         List<Position> result = new ArrayList<Position>();
-        for (Assignment assignment : RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(event, helper, sessionToken))
+        for (Assignment assignment : RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(event, helper, sessionToken, AssignmentState.ACTIVE))
         {
             result.add(assignment.getEventPosition().getPosition());
         }

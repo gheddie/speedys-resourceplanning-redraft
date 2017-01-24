@@ -6,7 +6,6 @@ import org.camunda.bpm.engine.ProcessEngine;
 
 public class ConfirmHandler
 {
-
     public static String processConfirm(HttpServletRequest request, ProcessEngine processEngine)
     {
         return null;

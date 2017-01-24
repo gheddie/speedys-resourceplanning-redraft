@@ -12,6 +12,7 @@ import org.junit.Test;
 import de.gravitex.hibernateadapter.core.repository.RepositoryProvider;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
+import de.trispeedys.resourceplanning.entity.enumeration.AssignmentState;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
 import de.trispeedys.resourceplanning.repository.AssignmentRepository;
@@ -56,6 +57,6 @@ public class HelperCallbackNotThisTimeTest
         HelperInteraction.processHelperCallback(HelperCallback.NOT_THIS_TIME, helper.getId(), actualEvent.getId(), null, processEngine.getProcessEngine());
         
         // make sure all assignments in the new event are cancelled
-        assertEquals(0, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(actualEvent, helper, null).size());
+        assertEquals(0, RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(actualEvent, helper, null, AssignmentState.ACTIVE).size());
     }
 }

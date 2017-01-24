@@ -16,6 +16,7 @@ import de.trispeedys.resourceplanning.entity.Assignment;
 import de.trispeedys.resourceplanning.entity.Event;
 import de.trispeedys.resourceplanning.entity.Helper;
 import de.trispeedys.resourceplanning.entity.Position;
+import de.trispeedys.resourceplanning.entity.enumeration.AssignmentState;
 import de.trispeedys.resourceplanning.factory.EntityCreator;
 import de.trispeedys.resourceplanning.interaction.HelperInteraction;
 import de.trispeedys.resourceplanning.interaction.enumeration.HelperCallback;
@@ -74,7 +75,7 @@ public class MailReminderSimpleWalkthroughProcessTest
         // ResourcePlanningHelper.debugEvent(event);
         
         // there should be 2 active assignments for the helper in the event
-        assertEquals(2, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(event, helper, null).size());
+        assertEquals(2, RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(event, helper, null, AssignmentState.ACTIVE).size());
         
         TestUtil.fireTimer(instance, processEngine.getProcessEngine(), BpmTimers.TIMER_HELPER_REMINDER);
         
@@ -83,6 +84,6 @@ public class MailReminderSimpleWalkthroughProcessTest
         // ResourcePlanningHelper.debugEvent(event);
         
         // there should be 1 active assignments for the helper in the event
-        assertEquals(1, RepositoryProvider.getRepository(AssignmentRepository.class).findActiveByEventAndHelper(event, helper, null).size());
+        assertEquals(1, RepositoryProvider.getRepository(AssignmentRepository.class).findByEventAndHelperAndState(event, helper, null, AssignmentState.ACTIVE).size());
     }
 }

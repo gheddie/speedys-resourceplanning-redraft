@@ -30,6 +30,14 @@ public class BpmKeyGenerator
         return businessKey;
     }
     
+    // swap positions process
+    
+    public static String generateSwapPositionsBusinessKey(Helper helper, Event event)
+    {
+        // TODO
+        return "key";
+    }
+    
     // earmark process
     
     public static String generateMailReminderEarmarkBusinessKey(Helper helper, Event event, Position position)

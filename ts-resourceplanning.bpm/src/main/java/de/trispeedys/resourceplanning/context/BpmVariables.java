@@ -43,4 +43,13 @@ public class BpmVariables
         
         public static final String VAR_EARMARK_HELPER_ID = "earmarkHelperId";
     }
+    
+    public class SwapPositionsProcess
+    {
+        public static final String VAR_SWAP_BY_System = "swapBySystem";
+        
+        public static final String VAR_TO_NULL_SWAP = "isToNullSwap";
+
+        public static final String VAR_SWAP_HELPER_ID = "swapHelperId";
+    }
 }
